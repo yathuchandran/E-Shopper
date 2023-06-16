@@ -1,0 +1,120 @@
+{{>adminHeader}}
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Categories</title>
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.5.0/css/bootstrap.min.css">
+  <!-- Custom CSS -->
+  <link rel="stylesheet" type="text/stylesheets" href="/stylesheets/category.css">
+</head>
+
+
+<body>
+  <div class="container">
+    <div class="table-container">
+      <h1>Categories</h1>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Image</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+
+        {{!-- <a href="#" class="btn btn-edit">Edit Categories</a> --}}
+
+        <tbody>
+          {{#each category}}
+          <tr>
+
+            <td>{{this.name}}</td>
+
+            <td><img src="/uploads/{{this.image}}" alt="{{this.image}}" width="100px" height="100px"></td>
+            <td>
+
+
+
+              {{!-- query --}}
+              <a href="/admin/editcategory?id={{this._id }}" class="btn btn-edit">Edit</a>
+
+
+              {{!-- working old alert dont delete
+              <a href="/admin/deletecategory?id={{this._id}}"
+                onclick="return confirm('Are you sure you want to delete this item?');"
+                class="btn btn-delete">Delete</a> --}}
+
+
+              {{!-- <a href="/admin/deletecategory?id={{this._id}}" id="data-category-id"
+                onclick="return showDeleteConfirmation(event);" class="btn btn-delete">Delete</a> --}}
+              <a href="#" data-category-id="{{this._id}}" onclick="showDeleteConfirmation(event);"
+                class="btn btn-delete">Delete</a>
+
+
+            </td>
+
+          </tr>
+          {{/each}}
+
+        </tbody>
+      </table>
+      <a href="/admin/addcategory" class="btn btn-success">Add Category</a>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.5.0/js/bootstrap.min.js"></script>
+
+  {{!-- sweetalert --}}
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+  <script>
+    function showDeleteConfirmation(event) {
+      event.preventDefault();
+      const categoryId = event.target.getAttribute("data-category-id");
+      //Promise API waits for the user to interact with the confirmation dialog, 
+      //and then uses the fetch API to send the delete/get request to the API.
+      return new Promise((resolve) => {
+        swal({
+          title: "Are you sure?",
+          text: "Once deleted, you will not be able to recover this category!",
+          icon: "warning",
+          buttons: true,
+          dangerMode: true,
+        }) // returns a Promise
+          .then((willDelete) => {
+            if (willDelete) {
+              resolve(true);
+            } else {
+              resolve(false);
+            }
+          });
+      })
+        .then((confirmed) => {
+          if (confirmed) {
+            fetch(`/admin/deletecategory?id=${categoryId}`, {
+              method: "GET"
+            })
+              .then(response => {
+                if (!response.ok) {
+                  throw new Error(`Failed to delete category: ${response.status}`); //If the request fails, an error message is displayed.
+                }
+                location.reload();  //If the request is successful, the page is reloaded to reflect the changes.
+              })
+              .catch(error => {
+                console.error(error);
+                alert("Failed to delete category");
+              });
+          }
+        });
+    }
+  </script>
+</body>
+
+</html>

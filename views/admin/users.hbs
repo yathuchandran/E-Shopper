@@ -1,0 +1,117 @@
+{{>adminHeader}}
+<!DOCTYPE html>
+<html >
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Table</title>
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheets" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.5.0/css/bootstrap.min.css">
+  <!-- Custom CSS -->
+  <link rel="stylesheets" type="text/stylesheets" href="/stylesheets/adminuserlist.css">
+</head>
+
+<style>
+  body {
+    background-color: #f5f5f5;
+  }
+
+  .table-container {
+    max-width: 1075px;
+    margin: 0 auto;
+    margin-top: 50px;
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+
+  .table-container h1 {
+    text-align: center;
+    margin-bottom: 30px;
+  }
+
+  .table-container td {
+    vertical-align: middle;
+  }
+
+  .table-container a {
+    margin-right: 10px;
+  }
+
+  .table-container .btn-edit {
+    background-color: #007bff;
+    color: #fff;
+  }
+
+  .table-container .btn-edit:hover {
+    background-color: #0069d9;
+  }
+
+  .table-container .btn-delete {
+    background-color: #dc3545;
+    color: #fff;
+  }
+
+  .table-container .btn-delete:hover {
+    background-color: #c82333;
+  }
+</style>
+
+
+<body>
+  <div class="container">
+    <div class="table-container">
+      
+      <h1>User Table</h1>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+
+            <th>Action</th>
+          </tr>
+        </thead>
+
+
+
+        <tbody>
+          {{#each users}}
+          <tr>
+
+            <td>{{this.name}}</td>
+            <td>{{this.email}}</td>
+
+            <td>
+
+
+              {{#if this.is_blocked }}
+              <form action="/admin/users/block?id={{this._id}}" method="post">
+                 <button type="submit" class="btn btn-success">UnBlock</button>
+              </form>
+              {{else}}
+            
+              <form action="/admin/users/block?id={{this._id}}" method="post">
+                <button type="submit" class="btn btn-delete">Block</button>
+              </form>
+              {{/if}}
+
+            </td>
+
+          </tr>
+          {{/each}}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <!-- Bootstrap JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.5.0/js/bootstrap.min.js"></script>
+
+
+
+</body>
+
+</html>
+

@@ -1,0 +1,219 @@
+{{> adminHeader}}
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Products</title>
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.5.0/css/bootstrap.min.css">
+  <!-- Custom CSS -->
+  <link rel="stylesheet" type="text/stylesheets" href="/stylesheets/product.css">
+
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.16/dist/sweetalert2.all.min.js"></script>
+
+</head>
+
+<style>
+  body {
+    background-color: #f5f5f5;
+  }
+
+  .table-container {
+    max-width: 1075px;
+    margin: 0 auto;
+    margin-top: 50px;
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+
+  .table-container h1 {
+    text-align: center;
+    margin-bottom: 30px;
+  }
+
+  .table-container td {
+    vertical-align: middle;
+  }
+
+  .table-container a {
+    margin-right: 10px;
+  }
+
+  .table-container .btn-edit {
+    background-color: #8c97d0;
+    color: #fff;
+  }
+
+  .table-container .btn-edit:hover {
+    background-color: #90acd8;
+  }
+
+  .table-container .btn-delete {
+    background-color: #d67780;
+    color: #fff;
+  }
+
+  .table-container .btn-delete:hover {
+    background-color: #cc6d77;
+  }
+    /* Style the submit button */
+    .submit-button {
+        padding: 0.5rem;
+        background-color: #D19C97;
+        color: rgb(16, 15, 15);
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+</style>
+
+
+
+<body>
+  <div class="container">
+    <div class="table-container">
+      <div class="error-content text-center" style="background-image: url(/image/9ba09080924795.5cef394f1046e-COPY.jpg); background-size: cover;">
+  <div class="container">
+    <h2 class="section-title px-5">
+      <span class="px-2" style="color: #100f0f; font-size: 36px; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);">
+        Welcome to our <strong>Products</strong> section!
+      </span>
+    </h2>
+    <p style="color: rgb(19, 19, 19);"></p>
+  </div><!-- End .container -->
+</div>
+
+
+
+     <table id="myTable" class="table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Image</th>
+            <th>Category</th>
+            <th>Price</th>
+            <th>Brand</th>
+            <th>Quantity</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+
+        {{!-- <a href="#" class="btn btn-edit">Edit Products</a> --}}
+
+        <tbody>
+          <a href="/admin/addProduct" onclick="ADDPRODUCT()" class="submit-button">Add Product</a>
+          <br>
+          <br>
+          {{#each product}}
+
+          {{this.categoryData.name}}
+          <tr>
+            {{!-- <td>{{this._id}}</td> --}}
+            <td>{{this.name}}</td>
+            <td>{{this.description}}</td>
+            <td><img src="/uploads/{{this.image.[0]}}" alt="{{this.image}}" width="100px" height="100px"></td>
+            <td>{{this.category}}</td>
+            <td>{{this.price}}</td>
+            <td>{{this.brand}}</td>
+            <td>{{this.quantity}}</td>
+
+            <td>
+              <a href="/admin/editproduct?id={{this.id}}" class="btn btn-edit">Edit</a>
+              {{!-- <a href="#" class="btn btn-delete">Block</a> --}}
+              {{!-- <a href="/admin/blockproduct?id={{this.id}}" class="btn btn-delete">Block</a> --}}
+              {{#if this.is_blocked }}
+
+              <a href="/admin/blockproduct/{{this._id}}" class="btn btn-success">Unblock</a>
+              {{else}}
+
+              <a href="/admin/blockproduct/{{this._id}}" class="btn btn-delete">Block</a>
+              {{/if}}
+            </td>
+          </tr>
+
+          {{/each}}
+
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.5.0/js/bootstrap.min.js"></script>
+
+  <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+  <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
+  <script>
+   
+  </script>
+
+ <script>
+    $(document).ready(function () {
+      $('#myTable').DataTable({
+        "order": [[1, "desc"]],
+        "paging": true,
+        "lengthMenu": [10, 25, 50, 75, 100], // Change the number of rows displayed per page
+        "pageLength": 10 // Set the initial number of rows displayed per page
+      });
+    });
+  </script>
+
+  <script>
+
+    async function ADDPRODUCT() {
+
+
+        let orderplacement = await fetch("/admin/addProduct", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(
+                {
+                   
+                }
+            ),
+        });
+        let result = await orderplacement.json()
+
+        if (result.res === "success") {
+            Swal.fire({
+                title: "Success",
+                text: "Item added successfully !",
+                icon: "success",
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "OK",
+                timer: 3000,
+            })
+        } else {
+            Swal.fire({
+                title: "Something went wrong",
+                text: "something went wrong !",
+
+                icon: "failure",
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "OK",
+                timer: 3000,
+            }).then((res) => {
+                window.location
+            });
+        }
+
+
+    }
+
+
+  </script>
+</body>
+
+</html>

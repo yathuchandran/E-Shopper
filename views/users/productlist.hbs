@@ -1,0 +1,438 @@
+{{>userheader}}
+<style>
+
+.stockout1 {
+    width: 7rem;
+    height: 1.65rem;
+    background-color: rgb(0, 0, 0);
+    font-size: large;
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    z-index: 10;
+
+  }
+
+</style>
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light container bg-white mt-5">
+
+
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item active">
+        <a class="nav-link" href="/shop">Home<span class="sr-only">(current)</span></a>
+      </li>
+
+
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+          aria-haspopup="true" aria-expanded="false">
+          Sort
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+
+          <option id="sortname" class="dropdown-item">Sort A-Z</optio>
+          <option id="sortname1" class="dropdown-item">Sort Z-A</option>
+          <option id="sortprice" class="dropdown-item">Sort price</option>
+          <option id="sortprice1" class="dropdown-item">Sort price high to low</option>
+
+
+
+        </div>
+      </li>
+      {{#each categorydata}}
+      <li class="nav-item">
+        <a style="cursor: pointer;" class="nav-link category-link" onclick="category('{{this._id}}')"
+          data-categoryid="{{this._id}}">{{this.name}}</a>
+      </li>
+      <input class="categoryid" type="hidden" name="categoryid" value="{{this._id}}">
+      {{/each}}
+    </ul>
+    <form class="form-inline my-2 my-lg-0 " id="search-form">
+      <input class="form-control mr-sm-2" id="search-input" type="search" placeholder="Search" aria-label="Search">
+      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+    </form>
+  </div>
+</nav>
+
+<section class="product spad">
+  <div class="container">
+    <div class="row property__gallery" id="productcard">
+      {{#each productdata.docs}}
+      <div class="col-lg-3 col-md-4 col-sm-6 mix women product">
+        <div class="product__item">
+          {{#if this.quantity}}
+          <div class="product__item__pic set-bg" data-setbg="images/{{this.image.[0]}}">
+           <div class="label new">New</div>
+          {{else}}
+          
+          <div class="product__item__pic set-bg" data-setbg="images/{{this.image.[0]}}">
+            <div class="label text-light d-flex justify-content-center align-items-center mx-2  stockout1">out of
+                stock
+              </div>
+              {{/if}}
+           
+            <ul class="product__hover" id="my-element">
+              <li><a href="img/product/product-1.jpg" class="image-popup"><span class="arrow_expand"></span></a></li>
+              <li><a onclick="addtowishlist('{{this._id}}')"><span class="icon_heart_alt"></span></a></li>
+              <li><a onclick="addtocart('{{this._id}}')"><span class="icon_bag_alt"></span></a></li>
+            </ul>
+          </div>
+          <div class="product__item__text">
+            <h6 class="product-name"><a href="/productdetails?id={{this._id}}">{{this.name}}</a></h6>
+            <div class="rating">
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              <i class="fa fa-sta/products
+            </div>
+            <div class="product__price">Rs. {{this.price}}</div>
+          </div>
+        </div>
+      </div>
+      {{/each}}
+    </div>
+
+
+
+    <nav class=" ">
+      <ul class="pagination justify-content-center ">
+        <li class="page-item">
+          <a class="page-link" href="?page={{productdata.prevPage}}" aria-label="Previous">
+            <span aria-hidden="true">&laquo;</span>
+            <span class="sr-only">Previous</span>
+          </a>
+        </li>
+
+        {{#each productdata.pages}}
+        <li class="page-item {{#if this.active}}active{{/if}}">
+          <a class="page-link" href="?page={{this.pageNumber}}&category={{this.categoryId}}">{{this.pageNumber}}</a>
+
+        </li>
+        {{/each}}
+
+        {{#if productdata.hasNextPage}}
+        <li class="page-item ">
+          <a class="page-link" href="?page={{productdata.nextPage}}" aria-label="Next">
+            <span aria-hidden="true">&raquo;</span>
+            <span class="sr-only">Next</span>
+          </a>
+        </li>
+        {{else}}
+        <li class="page-item disabled">
+          <a class="page-link category-link" href="#" >{{this.pageNumber}}</a>
+          <span aria-hidden="true">&raquo;</span>
+          <span class="sr-only">Next</span>
+          </a>
+        </li>
+        {{/if}}
+      </ul>
+    </nav>
+
+
+
+
+
+  </div>
+</section>
+
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.all.min.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+<script>
+
+
+  async function category(data) {
+    const productcard = document.getElementById('productcard')
+    const id = data
+    console.log(id, 'from productlist')
+    const response = await fetch('/mens', {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        id: id
+      })
+    })
+    const prodata = await response.json()
+
+    console.log(prodata)
+
+    productcard.innerHTML = ''
+
+    prodata.mensdata.forEach((item) => {
+      productcard.innerHTML += `<div class="col-lg-3 col-md-4 col-sm-6 mix women product">
+    <div class="product__item">
+      <div class="product__item__pic set-bg" data-setbg="/images/${item.image[0]}"><img src="/images/${item.image[0]}" alt="" width="260px" height="360px">
+        <div class="label new">New</div>
+        <ul class="product__hover" id="my-element">
+          <li><a href="img/product/product-1.jpg" class="image-popup"><span class="arrow_expand"></span></a></li>
+          <li><a onclick="addtowishlist('${item._id}')"><span class="icon_heart_alt"></span></a></li>
+          <li><a onclick="addtocart('${item._id}')"><span class="icon_bag_alt"></span></a></li>
+        </ul>
+      </div>
+      <div class="product__item__text  id="heart"">
+        <h6 class="product-name"><a href="/productdetails?id=${item._id}">${item.name}</a></h6>
+        <div class="rating">
+          <i class="fa fa-star"></i>
+          <i class="fa fa-star"></i>
+          <i class="fa fa-star"></i>
+          <i class="fa fa-star"></i>
+          <i class="fa fa-star"></i>
+        </div>
+        <div class="product__price">Rs. ${item.price}</div>
+      </div>
+    </div>
+  </div>`
+    })
+  }
+
+  function addtowishlist(data) {
+
+    const id = data
+    console.log(id)
+    const Swal = window.Swal;
+    fetch("/addwishlist", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        id: id
+      })
+    })
+      .then(response => {
+        return response.json();
+
+      })
+      .then(data => {
+
+        const element = document.getElementById('heart');
+        console.log(element)
+        Swal.fire({
+          toast: true,
+
+          icon: 'success',
+          title: 'Added to Wishlist!',
+          showConfirmButton: false,
+          timer: 2000,
+
+        });
+
+
+      })
+
+      .catch(error => {
+        console.log(error);
+      });
+
+
+
+  }
+
+
+
+  function addtocart(data) {
+
+    const id = data
+    console.log(id)
+
+    fetch("/addtocart", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        id: id
+      })
+    })
+      .then(response => {
+        return response.json();
+      })
+      .then(data => {
+
+        console.log(data)
+        let element = document.getElementById("my-element");
+
+        Swal.fire({
+          toast: true,
+
+          icon: 'success',
+          title: 'Added to cart!',
+          showConfirmButton: false,
+          timer: 2000,
+
+        });
+
+
+
+      })
+
+      .catch(error => {
+        console.log(error);
+      });
+
+
+
+  }
+
+
+
+
+</script>
+
+
+
+
+
+<script>
+  const productcard = document.getElementById('productcard');
+  const categoryid = document.querySelector('.categoryid').value
+  const categoryLinks = document.querySelectorAll('.category-link');
+  let categoryId
+
+  categoryLinks.forEach((link) => {
+    link.addEventListener('click', (event) => {
+      categoryId = event.target.dataset.categoryid;
+      // Store the category ID in a variable for later use
+    });
+  });
+
+
+  const serachForm = document.getElementById('search-form')
+
+
+  serachForm.addEventListener('submit', async function (event) {
+    event.preventDefault();
+    const searchTerm = document.getElementById('search-input').value;
+    const productcard = document.getElementById('productcard')
+    const response = await fetch('/search', {
+
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        searchTerm: searchTerm,
+        categoryid: categoryId
+      })
+    })
+    productcard.innerHTML = ''
+    const data = await response.json()
+    const products = data.productdata
+
+    console.log(products)
+    products.forEach((item) => {
+      productcard.innerHTML += `<div class="col-lg-3 col-md-4 col-sm-6 mix women product">
+    <div class="product__item">
+      <div class="product__item__pic set-bg" data-setbg="/images/${item.image[0]}"><img src="/images/${item.image[0]}" alt="" width="260px" height="360px">
+        <div class="label new">New</div>
+        <ul class="product__hover" id="my-element">
+          <li><a href="img/product/product-1.jpg" class="image-popup"><span class="arrow_expand"></span></a></li>
+          <li><a onclick="addtowishlist('${item._id}')"><span class="icon_heart_alt"></span></a></li>
+          <li><a onclick="addtocart('${item._id}')"><span class="icon_bag_alt"></span></a></li>
+        </ul>
+      </div>
+      <div class="product__item__text  id="heart"">
+        <h6 class="product-name"><a href="/productdetails?id=${item._id}">${item.name}</a></h6>
+        <div class="rating">
+          <i class="fa fa-star"></i>
+          <i class="fa fa-star"></i>
+          <i class="fa fa-star"></i>
+          <i class="fa fa-star"></i>
+          <i class="fa fa-star"></i>
+        </div>
+        <div class="product__price">Rs. ${item.price}</div>
+      </div>
+    </div>
+  </div>`;
+    })
+
+
+  })
+
+
+
+
+  async function updateProducts(endpoint, elementToUpdate) {
+    const searchTerm = document.getElementById('search-input').value;
+    const response = await fetch(endpoint, {
+
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        categoryid: categoryId,
+        searchTerm: searchTerm,
+      })
+    })
+    elementToUpdate.innerHTML = '';
+    const data = await response.json();
+    const products = data.productdata;
+    products.forEach((item) => {
+      elementToUpdate.innerHTML += `<div class="col-lg-3 col-md-4 col-sm-6 mix women product">
+        <div class="product__item">
+          <div class="product__item__pic set-bg" data-setbg="/images/${item.image[0]}"><img src="/images/${item.image[0]}" alt="" width="260px" height="360px">
+            <div class="label new">New</div>
+            <ul class="product__hover" id="my-element">
+              <li><a href="img/product/product-1.jpg" class="image-popup"><span class="arrow_expand"></span></a></li>
+              <li><a onclick="addtowishlist('${item._id}')"><span class="icon_heart_alt"></span></a></li>
+              <li><a onclick="addtocart('${item._id}')"><span class="icon_bag_alt"></span></a></li>
+            </ul>
+          </div>
+          <div class="product__item__text  id="heart"> 
+            <h6 class="product-name"><a href="/productdetails?id=${item._id}">${item.name}</a></h6>
+            <div class="rating">
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+            </div>
+            <div class="product__price">Rs. ${item.price}</div>
+          </div>
+        </div>
+      </div>`;
+    });
+  }
+
+  const sortAscending = document.getElementById('sortname');
+  sortAscending.addEventListener('click', async function (event) {
+    event.preventDefault();
+    await updateProducts('/sortascending', productcard);
+  });
+
+  const sortDescending = document.getElementById('sortname1');
+  sortDescending.addEventListener('click', async function (event) {
+    event.preventDefault();
+    await updateProducts('/sortdescending', productcard);
+  });
+
+  const sortPriceAscending = document.getElementById('sortprice');
+  sortPriceAscending.addEventListener('click', async function (event) {
+    event.preventDefault();
+    await updateProducts('/sortpriceascending', productcard);
+  });
+
+  const sortPriceDescending = document.getElementById('sortprice1');
+  sortPriceDescending.addEventListener('click', async function (event) {
+    event.preventDefault();
+    await updateProducts('/sortpricedescending', productcard);
+  });
+</script>
+
+{{> userfooter}}

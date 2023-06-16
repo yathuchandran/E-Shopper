@@ -1,0 +1,253 @@
+{{>adminHeader}}
+<!DOCTYPE html>
+
+<link rel="stylesheet" type="text/css" href="/css/orderdetails.css">
+<style>
+    table {
+        border-collapse: collapse;
+        width: 75%;
+        margin: 25px 0;
+        margin-left: 120px;
+    }
+
+
+    th,
+    td {
+        text-align: left;
+        padding: 8px;
+        border: 1px solid #ddd;
+    }
+
+    th {
+        background-color: #f2f2f2;
+    }
+
+    .product-image img {
+        width: 100%;
+        max-width: 200px;
+        height: auto;
+    }
+
+
+
+
+
+
+
+
+
+    .order-details {
+        display: flex;
+        align-items: center;
+        border: 1px solid #ddd;
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+
+    .product {
+        display: flex;
+        align-items: center;
+        margin-left: 130px
+    }
+
+    .product-image {
+        width: 100px;
+        height: 100px;
+        margin-right: 20px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        overflow: hidden;
+    }
+
+    .product-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .product-info {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .product-name {
+        font-size: 24px;
+        margin: 0;
+    }
+
+    .brand,
+    .price {
+        margin: 5px 0;
+        font-size: 16px;
+    }
+
+    .quantity label {
+        margin-right: 10px;
+        font-size: 16px;
+        margin-left: 150px;
+
+    }
+
+    input[type=number] {
+        width: 50px;
+        height: 30px;
+        font-size: 16px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        padding: 0 10px;
+    }
+
+    .status p {
+        margin: 0;
+        font-size: 16px;
+        text-transform: uppercase;
+        font-weight: bold;
+        color: #333;
+        margin-left: 10px;
+        margin-bottom: 15px;
+    }
+
+     .form-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+    }
+
+    /* Style the form fields */
+    .form-field {
+        margin-bottom: 1rem;
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+    }
+
+    /* Style the label */
+    .form-field label {
+        margin-bottom: 0.5rem;
+        font-weight: bold;
+    }
+
+    /* Style the input */
+    .form-field input {
+        padding: 0.5rem;
+        border: 2px solid #000000;
+        border-radius: 4px;
+    }
+
+    /* Style the image preview */
+    .image-preview {
+        width: 200px;
+        height: 200px;
+        border: 2px solid #000000;
+        margin-bottom: 1rem;
+    }
+
+    /* Style the submit button */
+    .submit-button {
+        padding: 0.5rem;
+        background-color: #c47b7b;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    body {
+        background-color: #eeeded;
+    }
+
+    .table-container {
+        max-width: 1075px;
+        margin: 0 auto;
+        margin-top: 50px;
+        background-color: #fff;
+        padding: 30px;
+        border-radius: 5px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .table-container h1 {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    .table-container td {
+        vertical-align: middle;
+    }
+
+    .table-container a {
+        margin-right: 10px;
+    }
+    .error{
+    color: red;
+  }
+</style>
+
+<body>
+    <div class="container">
+        <div class="table-container">
+            <div class="form-container">
+                <h3 style="text-align:">Order Details</h3>
+
+
+
+                <table>
+                    <tr>
+                        <th>Image</th>
+                        <th>Product Name</th>
+                        <th>Brand</th>
+                        <th>Price</th>
+                        <th>Quantity</th>
+                        <th>Status</th>
+                        <th>Payment Id</th>
+                    </tr>
+                    {{#each orderDetail}}
+                    {{#each this.items}}
+                    <tr>
+                        <td class="product-image"><img src="/uploads/{{this.product_id.image.[0]}}"
+                                alt="{{this.image}}"></td>
+                        <td>{{product_id.name}}</td>
+                        <td>{{product_id.brand}}</td>
+                        <td>₹ {{product_id.price}}</td>
+                        <td>{{./quantity}}</td>
+                        <td>{{../status}}</td>
+                        <td>{{product_id.id}}</td>
+                        
+
+
+                    </tr>
+                    {{/each}}
+                    {{/each}}
+                </table>
+
+                <form  action="" method="post">
+                    <label for="status_change">Update Order Status:</label>
+                    <select id="status_change" name="status_change" required>
+                        <option value="">Select an option</option>
+                        <option value="ordered">Ordered</option>
+                        <option value="shipped">Shipped</option>
+                        <option value="cancelled">Cancelled</option>
+                        <option value="delivered">Delivered</option>
+                    </select>
+
+                   <div class="justify-content-between d-flex">
+    <button class="btn btn-primary ml-auto mr-2" type="submit" style="background-color: rgb(190, 132, 132);">Submit</button>
+    <input type="hidden" name="id" value="{{orderDetail._id}}">
+    <a href="/admin/downloadinvoicee?id={{orderDetail._id}}"
+        class="text-white btn btn-success text-decoration-none ml-auto mr-4"  style="background-color: rgb(190, 132, 132);"><strong>Download Invoice</strong></a>
+</div>
+
+
+
+                    
+                </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>

@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en">
+
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Yara</title>
+    <meta name="keywords" content="HTML5 Template">
+    <meta name="description" content="Molla - Bootstrap eCommerce Template">
+    <meta name="author" content="p-themes">
+
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/icons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/images/icons/logo.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/images/icons/logo.png">
+
+    <link rel="mask-icon" href="/assets/images/icons/safari-pinned-tab.svg" color="#666666">
+    <meta name="apple-mobile-web-app-title" content="Molla">
+    <meta name="application-name" content="Molla">
+    <meta name="msapplication-TileColor" content="#cc9966">
+    <meta name="msapplication-config" content="images/icons/browserconfig.xml">
+    <meta name="theme-color" content="#ffffff">
+
+    <link rel="stylesheet" href="/stylesheets/bootstrap.min.css">
+
+ {{!-- <link href="/stylesheets/style1.css" rel="stylesheet"> --}}
+
+
+    <style>
+        @import url("https://fonts.googleapis.com/css?family=Poppins:200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800");
+
+
+        .footer {
+            background-color: white
+        }
+
+        .footer .footer-logo {
+            margin-top: 0
+        }
+
+        .footer .widget-about p {
+            max-width: 540px
+        }
+
+        .footer .widget-about-title {
+            color: #fff
+        }
+
+        .footer .widget-about-info a {
+            color: #eea287
+        }
+
+        .footer .widget-title {
+            text-transform: uppercase;
+            letter-spacing: .01em;
+            color: black
+        }
+
+        .footer .footer-middle {
+            border: none;
+            padding-top: 6rem
+        }
+
+        .footer-bottom .container:before,
+        .footer-bottom .container-fluid:before {
+            background-color: #444
+        }
+
+        .header .logo {
+            position: relative;
+            transform: translateX(0) translateY(0);
+            left: 0;
+            margin: 0
+        }
+
+        .header .header-left a {
+            display: flex;
+            align-items: center
+        }
+
+        .header .cart-dropdown,
+        .header .compare-dropdown {
+            padding-left: 2.4rem
+        }
+
+        .header .cart-dropdown .cart-txt,
+        .header .compare-dropdown .cart-txt {
+            transition: color .3s
+        }
+
+        .header .cart-dropdown:hover .cart-txt,
+        .header .cart-dropdown:hover .dropdown-toggle,
+        .header .cart-dropdown:focus .cart-txt,
+        .header .cart-dropdown:focus .dropdown-toggle,
+        .header .cart-dropdown.active .cart-txt,
+        .header .cart-dropdown.active .dropdown-toggle,
+        .header .compare-dropdown:hover .cart-txt,
+        .header .compare-dropdown:hover .dropdown-toggle,
+        .header .compare-dropdown:focus .cart-txt,
+        .header .compare-dropdown:focus .dropdown-toggle,
+        .header .compare-dropdown.active .cart-txt,
+        .header .compare-dropdown.active .dropdown-toggle {
+            color: #eea287
+        }
+
+        .header .wishlist-link {
+            font-size: 2.8rem
+        }
+
+        .header .wishlist-link:hover .wishlist-txt,
+        .header .wishlist-link:focus .wishlist-txt {
+            color: #eea287
+        }
+
+        .header .wishlist-link .wishlist-count,
+        .header .cart-dropdown .cart-count {
+            min-width: 1.7rem;
+            height: 1.7rem;
+            margin-bottom: 1.5rem;
+            margin-left: -1.2rem;
+            background-color: #222;
+            color: #fff;
+            font-weight: 400;
+            font-size: 1rem
+        }
+
+        .header .cart-dropdown span {
+            font-size: 1.3rem;
+            font-weight: 600;
+            letter-spacing: 0;
+            color: #222;
+            margin-left: .8rem
+        }
+
+        .header .header-bottom {
+            background-color: #fff
+        }
+
+        .header .header-bottom .menu>li>a {
+            letter-spacing: .01em;
+            color: #222;
+            padding-top: 2rem;
+            padding-bottom: 2rem
+        }
+
+        .header .header-bottom .menu>li>a:before {
+            top: unset;
+            bottom: 1.5rem;
+            background-color: #222
+        }
+
+        .header .header-bottom .menu>li+li {
+            margin-left: .4rem
+        }
+
+        .header .header-bottom .cart-dropdown:not(:hover):not(.show) .dropdown-toggle,
+        .header .header-bottom .compare-dropdown:not(:hover):not(.show) .dropdown-toggle {
+            color: #666
+        }
+
+        .btn-outline-primary-2 {
+            border-color: white;
+            color: white;
+        }
+
+        .btn-outline-primary-2:hover {
+            color: #c96;
+            background-color: white;
+        }
+
+
+        .header .header-right {
+            margin-left: 0
+        }
+
+
+    </style>
+
+
+
+</head>
+
+
+
+<body>
+
+
+    <div class="page-wrapper">
+
+        <header class="header">
+            <div class="header-bottom sticky-header">
+                <div class="container">
+                    <div class="header-left">
+                        <button class="mobile-menu-toggler">
+                            <span class="sr-only">Toggle mobile menu</span>
+                            <i class="icon-bars"></i>
+                        </button>
+
+                        <a href="index.html" class="logo">
+                            <img src="/assets/images/demos/demo-8/logo.png" alt="Molla Logo" width="60" height="10">
+                        </a>
+                    </div>
+                    <div class="header-center">
+                        <nav class="main-nav">
+                            <ul class="menu sf-arrows">
+                                <li class="megamenu-container active">
+                                    <a href="/home" class="">Home</a>
+                                </li>
+                                {{#each_from_three categoryData}}
+                                <li>
+                                    <a href="/products?id={{this._id}}" class="">{{this.category}}</a>
+                                </li>
+                                {{/each_from_three}}
+                                {{#if userData}}
+                                <li>
+
+                                    <a href="blog.html" class="sf-with-ul">{{userData.name}}</a>
+
+                                    <ul>
+                                        <li><a href="/profile">Profile</a></li>
+                                        <li><a href="/about">About</a></li>
+                                        <li><a href="/logout">Logout</a></li>
+                                    </ul>
+                                </li>
+                                {{else}}
+                                <li>
+
+                                    <a href="blog.html" class="sf-with-ul">Account</a>
+
+                                    <ul>
+                                        <li><a href="/login">Login</a></li>
+                                        <li><a href="/about">About</a></li>
+                                    </ul>
+                                </li>
+
+                                {{/if}}
+
+                            </ul><!-- End .menu -->
+                        </nav><!-- End .main-nav -->
+                    </div><!-- End .header-left -->
+
+                    <div class="header-right">
+                        <div class="header-search">
+                            <a href="#" class="search-toggle" role="button"><i class="icon-search"></i></a>
+                            <form action="#" method="get">
+                                <div class="header-search-wrapper">
+                                    <label for="q" class="sr-only">Search</label>
+                                    <input type="search" class="form-control" name="q" id="q" placeholder="Search in..."
+                                        required>
+                                </div><!-- End .header-search-wrapper -->
+                            </form>
+                        </div><!-- End .header-search -->
+
+                        {{#if userData}}
+
+                        <a href="/wishlist" class="wishlist-link">
+                            <i class="icon-heart-o"></i>
+                            <span class="wishlist-count">0</span>
+                        </a>
+
+                        <a href="/cart?id={{userData._id}}" class="wishlist-link">
+                            <i class="icon-shopping-cart"></i>
+                            <span class="wishlist-count">{{userData.cart.length}}</span>
+                        </a>
+
+                        {{else}}
+
+                        <a href="/login" class="wishlist-link">
+                            <i class="icon-heart-o"></i>
+                            <!-- <span class="wishlist-count"> </span> -->
+                        </a>
+
+                        <a href="/login" class="wishlist-link">
+                            <i class="icon-shopping-cart"></i>
+                            {{!-- <span class="wishlist-count">0</span> --}}
+                        </a>
+                        {{/if}}
+
+
+
+                        {{!-- <div class="dropdown cart-dropdown">
+                            <a href="#" class="dropdown-toggle" role="button" data-toggle="dropdown"
+                                aria-haspopup="true" aria-expanded="false" data-display="static">
+                                <i class="icon-shopping-cart"></i>
+                                <!-- <span class="cart-count">2</span>
+                            <span class="cart-txt">$ 164,00</span> -->
+                            </a>
+
+                            <!-- <div class="dropdown-menu dropdown-menu-right">
+                            <div class="dropdown-cart-products">
+                                <div class="product">
+                                    <div class="product-cart-details">
+                                        <h4 class="product-title">
+                                            <a href="product.html">Beige knitted elastic runner shoes</a>
+                                        </h4>
+
+                                        <span class="cart-product-info">
+                                            <span class="cart-product-qty">1</span>
+                                            x $84.00
+                                        </span>
+                                    </div> -->
+
+                            <!-- End .product-cart-details -->
+
+                            <!-- <figure class="product-image-container">
+                                        <a href="product.html" class="product-image">
+                                            <img src="/assets/images/products/cart/product-1.jpg" alt="product">
+                                        </a>
+                                    </figure>
+                                    <a href="#" class="btn-remove" title="Remove Product"><i class="icon-close"></i></a>
+                                </div> -->
+
+                            <!-- End .product -->
+
+                            <!-- <div class="product">
+                                    <div class="product-cart-details">
+                                        <h4 class="product-title">
+                                            <a href="product.html">Blue utility pinafore denim dress</a>
+                                        </h4>
+
+                                        <span class="cart-product-info">
+                                            <span class="cart-product-qty">1</span>
+                                            x $76.00
+                                        </span>
+                                    </div> -->
+
+                            <!-- End .product-cart-details -->
+
+                            <!-- <figure class="product-image-container">
+                                        <a href="product.html" class="product-image">
+                                            <img src="/assets/images/products/cart/product-2.jpg" alt="product">
+                                        </a>
+                                    </figure>
+                                    <a href="#" class="btn-remove" title="Remove Product"><i class="icon-close"></i></a>
+                                </div> -->
+
+                            <!-- End .product -->
+                            <!-- </div> -->
+
+                            <!-- End .cart-product -->
+
+                            <!-- <div class="dropdown-cart-total">
+                                <span>Total</span>
+
+                                <span class="cart-total-price">$160.00</span>
+                            </div> -->
+
+                            <!-- End .dropdown-cart-total -->
+
+                            <!-- <div class="dropdown-cart-action">
+                                <a href="cart.html" class="btn btn-primary">View Cart</a>
+                                <a href="checkout.html" class="btn btn-outline-primary-2"><span>Checkout</span><i class="icon-long-arrow-right"></i></a>
+                            </div> -->
+
+                            <!-- End .dropdown-cart-total -->
+                            <!-- </div> -->
+
+                            <!-- End .dropdown-menu -->
+                        </div><!-- End .cart-dropdown --> --}}
+
+
+                    </div><!-- End .header-right -->
+                </div><!-- End .container -->
+            </div><!-- End .header-bottom -->
+        </header><!-- End .header -->
+
+        <main class="main">
+            <nav aria-label="breadcrumb" class="breadcrumb-nav border-0 mb-0">
+                <div class="container">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="/home">Home</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Shopping cart</li>
+                    </ol>
+                </div><!-- End .container -->
+            </nav><!-- End .breadcrumb-nav -->
+
+            <div class="error-content text-center" style="background-image: url(/image/9ba09080924795.5cef394f1046e-COPY.jpg);
+                background-size: cover;">
+                <div class="container">
+                    <h1 class="error-title" style="color: white;">Wishlist is empty!</h1><!-- End .error-title -->
+                    <p style="color: white;">Please add some products to the wishlist</p>
+                    <a href="/allProducts" class="btn btn-outline-primary-2 btn-minwidth-lg">
+                        <span>BACK TO SHOPPING</span>
+                        <i class="icon-long-arrow-right"></i>
+                    </a>
+                </div><!-- End .container -->
+            </div><!-- End .error-content text-center -->
+        </main><!-- End .main -->
+
+
+        <footer class="footer footer-2">
+            <div class="footer-middle">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-sm-12 col-lg-6">
+                            <div class="widget widget-about">
+                                <img src="/assets/images/demos/demo-8/logo-footer.png" class="footer-logo"
+                                    alt="Footer Logo" width="82" height="25">
+                                <p>Yara - Your destination for premium, natural skincare. Shop now and discover
+                                    the best skin care products from around the world. </p>
+
+                                <div class="widget-about-info">
+                                    <div class="row">
+                                        <div class="col-sm-6 col-md-4">
+                                            <span class="widget-about-title">Got Question? Call me 24/7</span>
+                                            <a href="tel:+919567632318">+91 9567 6323 18</a>
+                                        </div><!-- End .col-sm-6 -->
+                                        <div class="col-sm-6 col-md-8">
+                                            <span class="widget-about-title">Payment Method</span>
+                                            <figure class="footer-payments">
+                                                <img src="/assets/images/payments.png" alt="Payment methods" width="272"
+                                                    height="20">
+                                            </figure><!-- End .footer-payments -->
+                                        </div><!-- End .col-sm-6 -->
+                                    </div><!-- End .row -->
+                                </div><!-- End .widget-about-info -->
+                            </div><!-- End .widget about-widget -->
+                        </div><!-- End .col-sm-12 col-lg-3 -->
+
+                        <div class="col-sm-4 col-lg-2">
+                            <div class="widget">
+                                <h4 class="widget-title">Information</h4><!-- End .widget-title -->
+
+                                <ul class="widget-list">
+                                    <li><a href="about.html">About Yara</a></li>
+
+                                    <li><a href="contact.html">Contact us</a></li>
+                                    <li><a href="#">Terms and conditions</a></li>
+                                    <li><a href="#">Privacy Policy</a></li>
+                                    <li><a href="faq.html">FAQ</a></li>
+
+                                </ul><!-- End .widget-list -->
+                            </div><!-- End .widget -->
+                        </div><!-- End .col-sm-4 col-lg-3 -->
+
+                        <div class="col-sm-4 col-lg-2">
+                            <div class="widget">
+                                <h4 class="widget-title">Customer Service</h4><!-- End .widget-title -->
+
+                                <ul class="widget-list">
+                                    <li><a href="#">Payment Methods</a></li>
+                                    <li><a href="#">Money-back guarantee!</a></li>
+                                    <li><a href="#">Returns</a></li>
+                                    <li><a href="#">Shipping</a></li>
+
+                                </ul><!-- End .widget-list -->
+                            </div><!-- End .widget -->
+                        </div><!-- End .col-sm-4 col-lg-3 -->
+
+                        <div class="col-sm-4 col-lg-2">
+                            <div class="widget">
+                                <h4 class="widget-title">My Account</h4><!-- End .widget-title -->
+
+                                <ul class="widget-list">
+                                    <li><a href="#">Profile</a></li>
+                                    <li><a href="cart.html">View Cart</a></li>
+                                    <li><a href="#">My Wishlist</a></li>
+                                    <li><a href="#">Track My Order</a></li>
+                                    <li><a href="#">Help</a></li>
+                                </ul><!-- End .widget-list -->
+                            </div><!-- End .widget -->
+                        </div><!-- End .col-sm-64 col-lg-3 -->
+                    </div><!-- End .row -->
+                </div><!-- End .container -->
+            </div><!-- End .footer-middle -->
+
+            <div class="footer-bottom">
+                <div class="container">
+                    <p class="footer-copyright">Copyright © 2023 Yara Store. All Rights Reserved.</p>
+                    <!-- End .footer-copyright -->
+                    <ul class="footer-menu">
+                        <li><a href="#">Terms Of Use</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                    </ul><!-- End .footer-menu -->
+
+                    <div class="social-icons social-icons-color">
+                        <span class="social-label">Social Media</span>
+                        <a href="#" class="social-icon social-facebook" title="Facebook" target="_blank"><i
+                                class="icon-facebook-f"></i></a>
+                        <a href="#" class="social-icon social-twitter" title="Twitter" target="_blank"><i
+                                class="icon-twitter"></i></a>
+                        <a href="#" class="social-icon social-instagram" title="Instagram" target="_blank"><i
+                                class="icon-instagram"></i></a>
+                        <a href="#" class="social-icon social-youtube" title="Youtube" target="_blank"><i
+                                class="icon-youtube"></i></a>
+                        <a href="#" class="social-icon social-pinterest" title="Pinterest" target="_blank"><i
+                                class="icon-pinterest"></i></a>
+                    </div><!-- End .soial-icons -->
+                </div><!-- End .container -->
+            </div><!-- End .footer-bottom -->
+        </footer><!-- End .footer -->
+
+    </div><!-- End .page-wrapper -->
+
+
+
+
+
+
+
+    <button id="scroll-top" title="Back to Top"><i class="icon-arrow-up"></i></button>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu-overlay"></div><!-- End .mobil-menu-overlay -->
+
+    <div class="mobile-menu-container">
+        <div class="mobile-menu-wrapper">
+            <span class="mobile-menu-close"><i class="icon-close"></i></span>
+
+            <form action="#" method="get" class="mobile-search">
+                <label for="mobile-search" class="sr-only">Search</label>
+                <input type="search" class="form-control" name="mobile-search" id="mobile-search"
+                    placeholder="Search in..." required>
+                <button class="btn btn-primary" type="submit"><i class="icon-search"></i></button>
+            </form>
+
+            <nav class="mobile-nav">
+                <ul class="mobile-menu">
+                    <li class="active">
+                        <a href="index.html">Home</a>
+
+                        <ul>
+                            <li><a href="index-1.html">01 - furniture store</a></li>
+
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="category.html">Shop</a>
+                        <ul>
+                            <li><a href="category-list.html">Shop List</a></li>
+
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="product.html" class="sf-with-ul">Product</a>
+                        <ul>
+                            <li><a href="product.html">Default</a></li>
+
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#">Pages</a>
+                        <ul>
+                            <li>
+                                <a href="about.html">About</a>
+
+                                <ul>
+                                    <li><a href="about.html">About 01</a></li>
+                                    <li><a href="about-2.html">About 02</a></li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="contact.html">Contact</a>
+
+                                <ul>
+                                    <li><a href="contact.html">Contact 01</a></li>
+                                    <li><a href="contact-2.html">Contact 02</a></li>
+                                </ul>
+                            </li>
+                            <li><a href="login.html">Login</a></li>
+                            <li><a href="faq.html">FAQs</a></li>
+                            <li><a href="404.html">Error 404</a></li>
+                            <li><a href="coming-soon.html">Coming Soon</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="blog.html">Blog</a>
+
+                        <ul>
+                            <li><a href="blog.html">Classic</a></li>
+                            <li><a href="blog-listing.html">Listing</a></li>
+                            <li>
+                                <a href="#">Grid</a>
+                                <ul>
+                                    <li><a href="blog-grid-2cols.html">Grid 2 columns</a></li>
+
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="#">Masonry</a>
+                                <ul>
+                                    <li><a href="blog-masonry-2cols.html">Masonry 2 columns</a></li>
+
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="#">Mask</a>
+                                <ul>
+                                    <li><a href="blog-mask-grid.html">Blog mask grid</a></li>
+
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="#">Single Post</a>
+                                <ul>
+                                    <li><a href="single.html">Default with sidebar</a></li>
+
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="elements-list.html">Elements</a>
+                        <ul>
+                            <li><a href="elements-products.html">Products</a></li>
+
+                        </ul>
+                    </li>
+                </ul>
+            </nav><!-- End .mobile-nav -->
+
+            <div class="social-icons">
+                <a href="#" class="social-icon" target="_blank" title="Facebook"><i class="icon-facebook-f"></i></a>
+                <a href="#" class="social-icon" target="_blank" title="Twitter"><i class="icon-twitter"></i></a>
+                <a href="#" class="social-icon" target="_blank" title="Instagram"><i class="icon-instagram"></i></a>
+                <a href="#" class="social-icon" target="_blank" title="Youtube"><i class="icon-youtube"></i></a>
+            </div><!-- End .social-icons -->
+        </div><!-- End .mobile-menu-wrapper -->
+    </div><!-- End .mobile-menu-container -->
+
+
+    <!-- Plugins JS File -->
+    <script src="homejs/jquery.min.js"></script>
+    <script src="homejs/bootstrap.bundle.min.js"></script>
+    <script src="homejs/jquery.hoverIntent.min.js"></script>
+    <script src="homejs/jquery.waypoints.min.js"></script>
+    <script src="homejs/superfish.min.js"></script>
+    <script src="homejs/owl.carousel.min.js"></script>
+    <!-- Main JS File -->
+    <script src="homejs/main.js"></script>
+
+
+</body>
+
+</html>

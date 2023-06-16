@@ -1,0 +1,135 @@
+{{> adminHeader}}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/stylesheets" href="/stylesheets/coupon.css">
+
+
+    <title>Coupons</title>
+</head>
+
+<style>
+    .coupon {
+        background-color: #fff;
+        border: 1px solid #ccc;
+        padding: 20px;
+        max-width: 400px;
+        margin: 0 auto;
+        font-family: Arial, sans-serif;
+        text-align: center;
+    }
+
+    .coupon h2 {
+        margin-top: 0;
+        font-size: 30px;
+    }
+
+    .coupon p {
+        margin-bottom: 20px;
+        font-size: 20px;
+    }
+
+    .coupon .code {
+        font-size: 24px;
+        font-weight: bold;
+        color: #f00;
+        margin-bottom: 10px;
+    }
+
+    .coupon .expiry {
+        font-size: 18px;
+        color: #999;
+        margin-bottom: 10px;
+    }
+
+    .coupon .details {
+        font-size: 16px;
+        color: #666;
+        margin-bottom: 10px;
+    }
+
+    .coupon .status {
+        font-size: 20px;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+
+    .coupon .valid {
+        color: #0f0;
+    }
+
+    .coupon .expired {
+        color: #f00;
+    }
+
+    .btn-success {
+        color: rgb(0, 0, 0);
+        background-color: rgb(208, 156, 167);
+    }
+</style>
+
+<body>
+
+
+
+    <br>
+   <div class="error-content text-center" style="background-image: url(/image/9ba09080924795.5cef394f1046e-COPY.jpg); background-size: cover;">
+  <div class="container">
+    <h2 class="section-title px-5">
+      <span class="px-2" style="color: #ee9393; font-size: 36px; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);">
+        Welcome to our <strong>Coupon</strong> section!
+      </span>
+    </h2>
+    <p style="color: rgb(19, 19, 19);"></p>
+    
+  </div><!-- End .container -->
+   <a href="http://127.0.0.1:3000/admin/addcoupon" class="btn btn-success" style="margin-left: 25px;">Add
+            Coupon</a>
+<br>
+</div>
+<br>
+    <div class="col-9 col-md-12">
+       
+        <div class="row pb-4">
+            <div class="col-12 pb-1">
+                <div class="d-flex align-items-center justify-content-between mb-4">
+                    
+                    {{#each couponData}}
+                    {{!-- <div class="container " style="display: flex;"> --}}
+                        <div class="coupon">
+                            <div class="bg-white card addresses-item mb-5 shadow p-5  bg-white rounded">
+
+                                <h4>Get Rs {{this.discount}} off your purchase!</h4>
+                                <p class="code">{{this.code}}</p>
+                                <p class="expiry">Expires on {{formatDate this.expiryDate "DD-MM-YYY HH:mm:ss"}}</p>
+
+                                <p class="details">Minimum bill: {{this.minBill}}</p>
+                                <p class="status valid">Status: {{this.status}}</p>
+                                <br>
+
+                            </div>
+
+
+                        </div>
+
+
+                        {{/each}}
+                    </div>
+                </div>
+            </div>
+        </div>
+     </div>   
+        
+       
+
+
+
+
+</body>
+
+</html>

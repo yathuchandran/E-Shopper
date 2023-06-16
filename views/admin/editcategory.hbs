@@ -1,0 +1,80 @@
+{{>adminHeader}}
+
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Edit Category</title>
+  {{!-- <link rel="stylesheet" type="text/css" href="/css/editcategory.css"> --}}
+  <link rel="stylesheet" href="/stylesheets/editcategory.css">
+</head>
+
+<body>
+  <div class="form-container">
+    <h1>Edit Category</h1>
+    <form action="" method="post" enctype="multipart/form-data">
+
+      <div class="form-field">
+        <label for="name">Name:</label>
+        <input type="text" id="name" value="{{category.name }}" required name="name">
+      </div>
+
+
+        <label for="image">Images:</label>
+        <img src="/uploads/{{category.image}}" alt="{{@index}}" width="100px" height="100px">
+     
+
+      
+      <div class="form-field">
+        <label for="image">Image:</label>
+        <input type="file" id="image" name="image" value={{category.image }} accept="image/*"
+          onchange="previewImage(event)">
+        <div  class="image-preview"></div>
+      </div>
+
+
+      <div>
+        <p style="color: rgb(183, 6, 6);">
+          {{message}}
+        </p>
+      </div>
+
+      <button class="submit-button" type="submit">Submit</button>
+
+      <input type="hidden" name="id" value="{{category._id }}">
+
+    </form>
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <script>
+    function previewImage(event) {
+      const preview = document.querySelector('.image-preview');
+      preview.innerHTML = '';
+      const file = event.target.files[0];
+      const reader = new FileReader();
+      reader.onload = function (event) {
+        const img = new Image();
+        img.src = event.target.result;
+        img.style.width = '100%';
+        img.style.height = '100%';
+        preview.appendChild(img);
+      };
+      reader.readAsDataURL(file);
+    }
+  </script>
+</body>
+
+</html>

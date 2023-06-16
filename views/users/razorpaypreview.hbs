@@ -1,0 +1,149 @@
+
+{{> header}}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="/css/razorpaypreview.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+
+    <title>Document</title>
+</head>
+
+<body>
+    <div class="text-center pt-5">
+        <h3>Order Details</h3>
+    </div>
+
+    <table class="container w-50">
+        <tr>
+            <th>Item</th>
+            <th>Price</th>
+            <th>Qty</th>
+            <th>Total</th>
+        </tr>
+        {{#each cartData}}
+        <tr>
+            <td>{{this.product_id.name}}</td>
+            <td>Rs {{this.product_id.price}}</td>
+            <td>{{this.quantity}}</td>
+            <td>{{calcTotal this.quantity this.product_id.price}}</td>
+        </tr>
+        {{/each}}
+
+        <tr>
+            <td colspan="3" align="right">Total:</td>
+
+            <td><span id="totalbill">{{totalbill}}</span></td>
+        </tr>
+
+    </table>
+
+    <div class="container d-flex justify-content-center">
+        <button id="rzp-button1">Pay with Razorpay</button>
+    </div>
+
+
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+
+    <script>
+        const amount = document.getElementById('totalbill') 
+        const amountValue = amount.textContent.trim()
+        
+        console.log('amountssssssssss'+amount)
+        console.log('amountssVALLLLL'+amountValue)
+
+  
+
+        var orderId;
+        $(document).ready(function () {
+            var settings = {
+
+                "url": "/create/orderId",
+                "method": "POST",
+                "timeout": 0,
+                "headers": {
+                    "Content-Type": "application/json"
+                },
+                "data": JSON.stringify({
+                    "amount": amountValue
+                }),
+            };
+   
+            document.getElementById('rzp-button1').onclick = function (e) {
+                // Disable the button to prevent multiple clicks
+                $(this).prop('disabled', true);
+
+                // Make the AJAX call to create the order
+                $.ajax(settings).done(function (response) {
+
+                    /*  orderId = response.orderId;
+                      console.log(orderId)*/
+
+                    var options = {
+                        "key": 'rzp_test_ZyFOjFmlXtnPnU', // Enter the Key ID generated from the Dashboard
+                        "amount": amountValue*100, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+                        "currency": "INR",
+                        "name": "Acme Corp",
+                        "description": "Test Transaction",
+                        "image": "https://example.com/your_logo",
+                        "order_id": orderId, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+                        "handler": function (response) {
+                           // alert(response.razorpay_payment_id);
+                             window.location.href = '/ordersuccess'
+
+                            var settings = {
+                                "url": "/api/payment/verify",
+                                "method": "POST",
+                                "timeout": 0,
+                                "headers": {
+                                    "Content-Type": "application/json"
+                                },
+                                "data": JSON.stringify({ response }),
+                            }
+                        },
+                        "theme": {
+                            "color": "#3399cc"
+                        }
+                    };
+
+                    var rzp1 = new Razorpay(options);
+
+                    rzp1.on('payment.failed', function (response) {
+                        alert(response.error.code);
+                        alert(response.error.description);
+                        alert(response.error.source);
+                        alert(response.error.step);
+                        alert(response.error.reason);
+                        alert(response.error.metadata.order_id);
+                        alert(response.error.metadata.payment_id);
+                    });
+
+                    rzp1.open();
+                    e.preventDefault();
+
+
+
+                }).fail(function (jqXHR, textStatus, errorThrown) {
+
+                    // Re-enable the button in case of an error
+                    $(this).prop('disabled', false);
+
+                    // Show the error message
+                    alert('Failed to create order: ' + textStatus);
+
+                });
+
+            };
+        });
+
+    </script>
+
+</body>
+
+</html>
+

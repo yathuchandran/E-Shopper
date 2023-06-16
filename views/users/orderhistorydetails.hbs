@@ -1,0 +1,529 @@
+{{> header}}
+
+{{!--
+<link rel="stylesheet" type="text/css" href="/css/orderhistorydetails.css"> --}}
+
+<style>
+    .order-details {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        border: 1px solid #ddd;
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+
+    .product1 {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        margin-left: 25px;
+        margin-right: 25px;
+    }
+
+
+
+
+    .product-image {
+        width: 150px;
+        height: 150px;
+        border: 1px solid #434040;
+        border-radius: 5px;
+        overflow: hidden;
+        margin-right: 20px;
+    }
+
+    .product-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .product-info {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .product-name {
+        font-size: 20px;
+        margin: 0;
+        margin-bottom: 5px;
+    }
+
+    .brand,
+    .price {
+        margin: 0;
+        font-size: 15px;
+        color: #888;
+    }
+
+    .quantity label {
+        font-size: 20px;
+        margin-bottom: 50px;
+    }
+
+    input[type=number] {
+        width: 50px;
+        height: 30px;
+        font-size: 10px;
+        border: 1px solid #dddd;
+        border-radius: 5px;
+        padding: 0 10px;
+    }
+
+    .shippingAddress {
+        display: flex;
+        align-items: center;
+
+        padding: 5px;
+        margin-bottom: 5px;
+    }
+
+    .paymentmode {
+        display: flex;
+        align-items: center;
+
+        padding: 5px;
+        margin-bottom: 5px;
+    }
+
+    h6 {
+        margin: 0;
+        margin-right: 10px;
+    }
+
+    td {
+        font-size: 16px;
+        color: #555555;
+    }
+
+    .status {
+        display: flex;
+        align-items: center;
+        margin-right: 20px;
+    }
+
+    .status p {
+        margin: 0;
+        font-size: 16px;
+        text-transform: uppercase;
+        font-weight: bold;
+        color: #333;
+    }
+
+   
+    .btn-success {
+        background-color: #D19C97;
+        ;
+        color: #fff;
+        border: none;
+    }
+
+    .btn-success:hover {
+        background-color: #D19C97;
+        ;
+    }
+
+    .btn-danger {
+        background-color: #dc3545;
+        color: #fff;
+        border: none;
+    }
+
+    .btn-danger:hover {
+        background-color: #c82333;
+    }
+
+    .form-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+    }
+
+    /* Style the form fields */
+    .form-field {
+        margin-bottom: 1rem;
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+    }
+
+    /* Style the label */
+    .form-field label {
+        margin-bottom: 0.5rem;
+        font-weight: bold;
+    }
+
+    /* Style the input */
+    .form-field input {
+        padding: 0.5rem;
+        border: 2px solid #000000;
+        border-radius: 4px;
+    }
+
+    /* Style the image preview */
+    .image-preview {
+        width: 200px;
+        height: 200px;
+        border: 2px solid #000000;
+        margin-bottom: 1rem;
+    }
+
+    /* Style the submit button */
+    .submit-button {
+        padding: 0.5rem;
+        background-color: #cc9698;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    body {
+        background-color: #e9e3e3;
+    }
+
+    .table-container {
+        max-width: 1075px;
+        margin: 0 auto;
+        background-color: #fff;
+        padding: 30px;
+        border-radius: 5px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .table-container h1 {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    .table-container td {
+        vertical-align: middle;
+    }
+
+    .table-container a {
+        margin-right: 10px;
+    }
+
+    .error {
+        color: red;
+    }
+</style>
+
+</style>
+
+</style>
+
+<body>
+    <br>
+    <div class="container">
+        <div class="table-container">
+            <div class="form-container">
+                <h3 style="margin-left;">Order Details</h3>
+                {{!-- <button class="btn btn-warning btn-sm" style="margin-left: 75%;"> Download Invoice</button> --}}
+
+                <div class="justify-content-between  ">
+                    <a href="/downloadinvoice?id={{orderDetail._id}}"
+                        class="text-white btn  btn-success text-decoration-none  "><strong>Download
+                            Invoice</strong></a>
+                </div>
+
+                {{#each orderDetail}}
+                {{#each this.items}}
+
+
+                <div class="container">
+
+                    <div class="order-details ">
+
+                        <div class="product1">
+                            <div class="product-image">
+                                <img src="/uploads/{{this.product_id.image.[0]}}" alt="{{this.image}}">
+                            </div>
+
+                            <div class="product-info">
+                                <h2 class="product-name" style="margin-right: 400px">{{product_id.name}}</h2>
+                                <p class="brand">{{product_id.brand}} </p>
+                                <p class="price">Rs {{product_id.price}} </p>
+                            </div>
+
+
+                            <div class="quantity" style="margin-right: 200px">
+                                <label for="quantity">Quantity: {{./quantity}} </label>
+                                {{!-- <input type="number" id="quantity" name="quantity" min="1" max="10" value="1">
+                                --}}
+                            </div>
+
+
+
+                        </div>
+
+                        <br>
+
+                        <br>
+                    </div>
+
+
+                </div>
+
+                <br>
+
+
+
+                {{/each}}
+                {{/each}}
+
+
+
+                <div class="container" style="flex ">
+                    <div class="container,flex;bg-white card addresses-item mb-4 shadow p-3  bg-white rounded">
+                        <div class="shippingAddress">
+                            <h6>Shipping Address : </h6>&nbsp;
+
+                            {{orderDetail.shippingAddress.address1}}<br>
+                            &nbsp;{{orderDetail.shippingAddress.address2}},{{orderDetail.shippingAddress.city}},
+                            <br>{{orderDetail.shippingAddress.state}}
+
+                        </div>
+
+
+                        <div class="paymentmode">
+
+                            <h6>Payment Mode : </h6>&nbsp;
+                            {{orderDetail.paymentMode}}
+
+                        </div>
+
+                        <div class="paymentmode">
+
+                            <h6>Name : </h6>&nbsp;
+                            {{orderDetail.owner.name}}
+
+                        </div>
+
+
+                        <div class="paymentmode">
+
+                            <h6>Date Ordered : </h6>&nbsp;
+                            {{formatDate orderDetail.dateOrdered "DD-MM-YYY HH:mm:ss"}}
+
+                        </div>
+                        {{!-- <div class="paymentmode">
+
+                            {{#if (eq orderDetail.coupon "")}}
+                            <h6>Coupon : </h6>&nbsp;
+                            <h6>Not applied</h6>
+                            {{else}}
+                            <h6>Coupon : </h6>&nbsp;
+                            {{orderDetail.coupon}}
+                            {{/if}}
+
+                        </div> --}}
+
+                        <div class="paymentmode">
+                            <h6>Payment Mode: </h6>&nbsp;
+                            {{orderDetail.paymentMode}}
+                        </div>
+
+                        {{!-- <div class="paymentmode">
+
+                            {{#if (eq orderDetail.discountAmt null)}}
+                            <h6>Discount Amount : </h6>&nbsp;
+                            <h6>NA</h6>
+                            {{else}}
+                            <h6>Discount Amount : </h6>&nbsp;
+                            {{orderDetail.discountAmt}}
+                            {{/if}}
+
+                        </div> --}}
+
+                        {{!-- <div class="paymentmode">
+                            {{#unless orderDetail.discountAmt}}
+                            <h6>Discount Amount: </h6>&nbsp;
+                            <h6>NA</h6>
+                            {{else}}
+                            <h6>Discount Amount: </h6>&nbsp;
+                            {{orderDetail.discountAmt}}
+                            {{/unless}}
+                        </div> --}}
+
+
+                        <div class="paymentmode">
+                            <h6>Amount : </h6>&nbsp;
+                            ₹ {{orderDetail.totalBill}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br>
+
+            <div class="d-flex justify-content-center align-item-center gap-4">
+                <div class="status d-flex align-items-center">
+                    <p id="statuss" class="m-0"> {{orderDetail.status}} </p>
+                </div>
+
+
+                {{!-- CANCEL ORDER --}}
+                {{#if (or (eq orderDetail.status "ordered") (eq orderDetail.status "shipped"))}}
+                <button id="myButton" class="btn btn-danger mx-2" onclick="cancelOrder('{{orderDetail._id}}')"
+                    type="submit">Cancel</button>
+                {{/if}}
+
+
+
+                {{!-- RETURN ORDER --}}
+                {{!-- {{#if (eq orderDetail.status "delivered")}}
+                <button id="myreturnButton" class="btn btn-danger mx-2" onclick="returnOrder('{{orderDetail._id}}')"
+                    type="submit">Return</button>
+                {{/if}} --}}
+
+                {{!-- RETURN ORDER --}}
+                {{#if (eq orderDetail.status "delivered")}}
+                <button id="myreturnButton" class="btn btn-danger mx-2"
+                    onclick="returnOrder('{{orderDetail._id}}')">Return</button>
+                {{!-- {{else}}
+                <button id="myreturnButton" class="btn btn-danger mx-2"
+                    onclick="returnOrder('{{orderDetail._id}}')">Return</button> --}}
+                {{/if}}
+
+
+
+            </div>
+        </div>
+    </div>
+    </div>
+</body>
+
+</html>
+
+
+{{!-- CANCEL ORDER FETCH--}}
+<script>
+    const cancelOrder = async (id) => {
+
+        //console.log('hi frm fetch')
+        //console.log(id)
+        const myButton = document.getElementById('myButton');
+
+        fetch('/ordercancel', {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                id: id//to send 
+            })
+        })
+            .then(response => {            //.then needed if not assigning fetch to a const variable 
+                //returns a promise that resolves with the parsed JSON data, which is then passed as an argument to the second .then() method. 
+                if (response.ok) {
+                    return response.json();
+                }
+                throw new Error('Network response was not ok.');
+            })
+            .then(jsonData => {
+                //console.log(jsonData);
+                document.getElementById('statuss').innerHTML = jsonData.status
+                {
+                    {
+                        const hey = document.getElementById('statuss')
+                        hey.innerHTML = `${jsonData.status}`
+                    }
+                }
+                if (jsonData.status == 'cancelled') {
+                    myButton.style.display = 'none';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
+</script>
+
+
+
+
+
+{{!-- RETURN ORDER FETCH--}}
+
+{{!--
+<script>
+    const returnOrder = async (id) => {
+
+        console.log('hi frm feuuuuuuuuuuuuuuuuu')
+        console.log(id)
+        const myButton = document.getElementById('myreturnButton');
+
+        fetch('/orderreturn', {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                id: id//to send 
+            })
+        })
+            .then(response => {            //.then needed if not assigning fetch to a const variable 
+                //returns a promise that resolves with the parsed JSON data, which is then passed as an argument to the second .then() method. 
+                if (response.ok) {
+                    return response.json();
+                }
+                throw new Error('Network response was not ok.');
+            })
+            .then(jsonData => {
+                //console.log(jsonData);
+                document.getElementById('statuss').innerHTML = jsonData.status
+                {
+                    {
+                        const hey = document.getElementById('statuss')
+                        hey.innerHTML = `${jsonData.status}`
+                    }
+                }
+                if (jsonData.status == 'returned') {
+                    myButton.style.display = 'none';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
+</script> --}}
+
+
+<script>
+
+
+    const returnOrder = async (id) => {
+        const myButton = document.getElementById('myreturnButton');
+
+        try {
+            const response = await fetch('/orderreturn', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    id: id,
+                }),
+            });
+
+            if (response.ok) {
+                const jsonData = await response.json();
+                document.getElementById('statuss').innerHTML = jsonData.status;
+
+                if (jsonData.status === 'returned') {
+                    myButton.style.display = 'none';
+                }
+            } else {
+                throw new Error('Network response was not ok.');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    };
+
+
+</script>

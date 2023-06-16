@@ -1,0 +1,305 @@
+{{>adminHeader}}
+
+
+</style>
+
+
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Sales Report</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.10.25/css/dataTables.bootstrap4.min.css">
+</head>
+<style>
+  .custom-button {
+    background-color: #dfb5b9;
+  }
+
+
+  /* Change font and font size */
+  body {
+    font-family: 'Helvetica Neue', sans-serif;
+    font-size: 16px;
+  }
+
+  table {
+    font-size: 14px;
+
+  }
+
+  th {
+    font-weight: bold;
+    text-align: left;
+  }
+
+  /* Add background color and hover effects to table rows and cells */
+  tr {
+    background-color: #eccfd2;
+  }
+
+  tr:hover {
+    background-color: #e0e0e0;
+  }
+
+  th,
+  td {
+    padding: 10px;
+  }
+
+  /* Adjust width and height of table elements */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  th,
+  td {
+    width: auto;
+  }
+
+  td {
+    height: 50px;
+  }
+
+  /* Add margin and padding to table cells and rows */
+  table {
+    margin-bottom: 20px;
+  }
+
+  th,
+  td {
+    padding: 10px;
+  }
+
+
+
+  /* CSS media queries */
+  @media only screen and (max-width: 767px) {
+    .d-flex.flex-column.flex-md-row {
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .align-self-center {
+      text-align: center;
+      margin: 10px 0;
+    }
+
+    .btn-group.contact {
+      margin-bottom: 0;
+    }
+
+    .btn-group.contact .btn-primary {
+      width: 100px;
+    }
+  }
+</style>
+
+<body>
+  <div class="container mt-5 table-responsive">
+    <form class="d-flex flex-column flex-md-row" action="/orderSearch" style="max-width:35em; height:auto;"
+      method="post">
+      <input name="fromdate" style="margin-left: 10px;border: 1px solid black; max-width:10em ;" type="date"
+        id="form3Examplea2" class="form-control me-2" required />
+      <h6 style="margin-left: 10px;" class="align-self-center">to</h6>
+      <input name="todate" style="margin-left: 10px;border: 1px solid black; max-width:10em;" type="date"
+        id="form3Examplea2" class="form-control ms-2 me-3" required />
+      <a style="margin-left: 10px;" class="btn btn custom-button" onclick="getOrders()">Get Orders</a>
+
+      <a href="/admin/dashboard" class="btn btn-edit">Go Back</a>
+    </form>
+
+
+
+    <div style="display: flex; flex-direction: row-reverse;">
+      <div class="btn-group contact mb-3 gap-2">
+        <div>
+          <button class="btn btn-primary" onclick="getpdf()" style="background-color: rgb(194, 147, 147);">Print
+            PDF</button>
+        </div>
+        <div>
+          <button style="margin-left: 10px; background-color: rgb(197, 153, 153);" class="btn btn-primary"
+           onclick="downloadExcel()" >Excel</button>
+        </div>
+      </div>
+    </div>
+
+
+
+
+    <div class="table-wrap" id="tablePrint">
+      <table id="myTable" class="table table-striped">
+        <thead>
+          <tr>
+            <th>Order ID</th>
+            <th>Status</th>
+            <th>Payment mode</th>
+            <th>Order Date</th>
+            <th>Order Bill</th>
+          </tr>
+        </thead>
+        <tbody class="rowClassParent">
+          {{#if orders}}
+          {{#each orders}}
+          <tr class="rowClass">
+            <td>{{this._id}}</td>
+            <td style="max-width: 200px">{{this.status}}</td>
+            <td>{{this.paymentMode}}</td>
+            <td>{{formatDate this.dateOrdered}}</td>
+            <td style="font-weight: 700;">₹ {{this.totalBill}}</td>
+          </tr>
+          {{/each}}
+          {{else}}
+          <tr>
+            <td colspan="5">
+              <h1>No orders</h1>
+            </td>
+          </tr>
+          {{/if}}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div style="text-align: center;">Total: <span id="total"></span></div>
+
+  <script src="/js/report.js"></script>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdn.datatables.net/1.10.25/js/dataTables.bootstrap4.min.js"></script>
+
+  <script src="https://unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
+
+
+  <script>
+
+    $(document).ready(function () {
+      $('#myTable').DataTable();
+    });
+
+
+
+    const rowClass = document.querySelectorAll('.rowClass')
+    const rowClassParent = document.querySelector('.rowClassParent')
+
+
+
+    async function getOrders() {
+      let fromDate = $('input[name="fromdate"]').val();
+      let toDate = $('input[name="todate"]').val();
+      const rows = document.getElementById('rows')
+
+
+      console.log(fromDate)
+      console.log(toDate)
+
+      const response = await fetch('/admin/getOrders', {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          fromDate: fromDate,
+          toDate: toDate
+        }),
+      });
+
+      rowClass.forEach(row => {
+        row.innerHTML = ''
+      });
+
+      const data = await response.json();
+      console.log('Received data:');
+      console.log(data);
+
+      const orderdata = data.orders; // Update property name from 'orderdata' to 'orders'
+      let total = 0;
+
+      console.log(orderdata, "orderdata");
+
+      if (orderdata) {
+        orderdata.forEach((order) => {
+          // Rest of the code
+          const date = new Date(order.dateOrdered);
+          const formattedDate = new Intl.DateTimeFormat('en-IN', {
+            day: '2-digit',
+            month: 'short',
+            year: 'numeric',
+            hour: 'numeric',
+            minute: 'numeric',
+            hour12: true
+          }).format(date);
+
+          total += order.totalBill;
+          const totalElement = document.getElementById('total');
+          totalElement.textContent = `₹${total}`;
+
+          rowClassParent.innerHTML +=
+            `<tr>
+          <td>${order._id}</td>
+          <td style="max-width: 200px">${order.status}</td>
+          <td>${order.paymentMode}</td>
+          <td>${formattedDate}</td>
+          <td style="font-weight: 700;">₹ ${order.totalBill}</td>
+        </tr>`;
+        });
+
+      };
+    }
+
+
+
+    // PDF PRINT
+    async function getpdf(){
+      window.print()
+  }
+
+  </script>
+
+
+  <script>
+
+function downloadExcel() {
+  // Get the table element
+  const table = document.getElementById('myTable');
+  
+  // Convert table to workbook object
+  const wb = XLSX.utils.table_to_book(table);
+  
+  // Generate Excel sheet binary data
+  const wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+  
+  // Create a Blob object from the binary data
+  const blob = new Blob([wbout], { type: 'application/octet-stream' });
+  
+  // Create a temporary anchor element
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  document.body.appendChild(a);
+  
+  // Set the anchor element attributes
+  a.href = url;
+  a.download = 'sales_report.xlsx';
+  
+  // Programmatically trigger the download
+  a.click();
+  
+  // Cleanup
+  setTimeout(function() {
+    URL.revokeObjectURL(url);
+    document.body.removeChild(a);
+  }, 0);
+}
+
+
+  </script>
+
+
+
+  
+</body>
+
+</html>

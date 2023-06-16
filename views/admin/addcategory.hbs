@@ -1,0 +1,163 @@
+{{>adminHeader}}
+
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Add Category</title>
+<link rel="stylesheet" type="text/stylesheets"   href="/stylesheets/addcategory.css"> 
+ <link rel="stylesheets" type="text/stylesheets" href="/stylesheets/addcategory">
+
+
+</head>
+<style>
+    .form-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  /* Style the form fields */
+  .form-field {
+    margin-bottom: 1rem;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  /* Style the label */
+  .form-field label {
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+  }
+  
+  /* Style the input */
+  .form-field input {
+    padding: 0.5rem;
+    border: 2px solid #000000;
+    border-radius: 4px;
+  }
+  /* Style the image preview */
+  .image-preview {
+    width: 200px;
+    height: 200px;
+    border: 2px solid #000000;
+    margin-bottom: 1rem;
+  }
+  
+  /* Style the submit button */
+  .submit-button {
+    padding: 0.5rem;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  .error{
+    color: red;
+  }
+ </style>
+<body>
+  
+  <div class="form-container">
+    <h1>Add Category</h1>
+    <form action="" id="addCategory"  method="post" enctype="multipart/form-data">
+    
+      <div class="form-field">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name">
+      </div>
+
+      <div class="form-field">
+        <label for="image">Image:</label>
+        <input type="file" id="image" name="image" accept="image/*" onchange="previewImage(event)">
+        <div class="image-preview"></div>
+      </div>
+
+      <div>
+        <p style="color: green;">
+          {{message}}
+        </p>
+      </div>
+
+      <div>
+        <p style="color: rgb(202, 14, 14);">
+          {{message1}}
+        </p>
+      </div>
+
+      <button class="submit-button" type="submit">Submit</button>
+
+      <a href="/admin/category" class="btn btn-edit">Go Back</a> 
+       
+    </form>
+ 
+     
+  </div>
+
+
+
+
+
+
+
+
+  
+  <script>
+    function previewImage(event) {
+      const preview = document.querySelector('.image-preview');
+      preview.innerHTML = '';
+      const file = event.target.files[0];
+      const reader = new FileReader();
+      reader.onload = function (event) {
+        const img = new Image();
+        img.src = event.target.result;
+        img.style.width = '100%';
+        img.style.height = '100%';
+        preview.appendChild(img);
+      };
+      reader.readAsDataURL(file);
+    }
+  </script>
+
+  <script src="https://code.jquery.com/jquery-3.7.0.js" integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM=" 
+  crossorigin="anonymous"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js" ></script>
+  
+   
+
+    <script>
+
+$(document).ready(function () {
+  //category
+  $("#addCategory").validate({
+    rules: {
+      name: {
+        required: true,
+
+      },
+      image: {
+        required: true,
+      }
+    },
+    messages: {
+
+      name: {
+        
+        required: "Enter valid name",
+      },
+      image: {
+        
+        required: "Choose valid image"
+
+      }
+    }
+  })
+})
+    </script>
+
+</body>
+
+</html>

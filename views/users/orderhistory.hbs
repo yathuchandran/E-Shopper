@@ -1,0 +1,134 @@
+{{> header}}
+
+
+
+
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Order History</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link href="/stylesheets/style.css" rel="stylesheet">
+
+</head>
+<style>
+     .form-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+    }
+
+    
+
+    
+
+   
+
+    body {
+        background-color: #f5f3f3;
+    }
+
+    .table-container {
+        max-width: 1075px;
+        margin: 0 auto;
+        
+        background-color: #fff;
+        padding: 30px;
+        border-radius: 5px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+   
+    .error{
+    color: red;
+  }
+</style>
+<body>
+    {{!-- <div class="container"> --}}
+        <div class="table-container">
+            <div class="form-container">
+                <h1>Order History</h1>
+                <table id="myTable" class="table order-table">
+                    <thead>
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Date Ordered</th>
+                            <th>Status</th>
+                            <th>Total</th>
+                            <th>Payment Mode</th>
+                            <th>Address</th>
+                            <th>Details </th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each orderData}}
+                        <tr>
+                            <td>{{this._id}}</td>
+                            <td>{{formatDate this.dateOrdered "DD-MM-YYYY HH:mm:ss"}}</td>
+
+
+                            {{#if (eq this.status "ordered")}}
+                            <td class="status ordered">{{this.status}}</td>
+                            {{else if (eq this.status "shipped")}}
+                            <td class="status shipped">{{this.status}}</td>
+                            {{else if (eq this.status "delivered")}}
+                            <td class="status delivered">{{this.status}}</td>
+                            {{else if (eq this.status "cancelled")}}
+                            <td class="status cancelled">{{this.status}}</td>
+                            {{else if (eq this.status "returned")}}
+                            <td class="status returned">{{this.status}}</td>
+                            {{/if}}
+
+
+                            <td>Rs {{this.totalBill}}</td>
+                            <td>{{this.paymentMode}}</td>
+                            <td>
+                                {{this.shippingAddress.address1}},<br>
+                                {{this.shippingAddress.address2}},{{this.shippingAddress.city}},
+                                <br>{{this.shippingAddress.state}}
+
+                            </td>
+                            <td><a href="http://127.0.0.1:3000/orderhistorydetails/?id={{this._id}}"
+                                    class="btn btn-primary btn-sm ">View
+                                    Details</a></td>
+
+                        </tr>
+                        {{/each }}
+
+
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Bootstrap JS -->
+            <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+        </div>
+    </div>
+    </div>
+
+</body>
+
+</html>
+
+
+</script>
+<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
+
+
+<script>
+
+    $(document).ready(function () {
+        $('#myTable').DataTable({
+            "order": [[1, "desc"]]
+        });
+    });
+</script>

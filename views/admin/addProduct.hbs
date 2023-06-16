@@ -1,0 +1,343 @@
+{{>adminHeader}}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Add Product</title>
+    {{!--
+    <link rel="stylesheets" type="text/stylesheets" href="/stylesheets/addproduct.css"> --}}
+    <link rel="stylesheets" type="text/stylesheets" href="/stylesheets/addproduct.css">
+
+</head>
+<style>
+    .form-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+    }
+
+    /* Style the form fields */
+    .form-field {
+        margin-bottom: 1rem;
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+    }
+
+    /* Style the label */
+    .form-field label {
+        margin-bottom: 0.5rem;
+        font-weight: bold;
+    }
+
+    /* Style the input */
+    .form-field input {
+        padding: 0.5rem;
+        border: 2px solid #000000;
+        border-radius: 4px;
+    }
+
+    /* Style the image preview */
+    .image-preview {
+        width: 200px;
+        height: 200px;
+        border: 2px solid #000000;
+        margin-bottom: 1rem;
+    }
+
+    /* Style the submit button */
+    .submit-button {
+        padding: 0.5rem;
+        background-color: #D19C97;
+        color: rgb(16, 15, 15);
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    body {
+        background-color: #f6f2f2;
+    }
+
+    .table-container {
+        max-width: 1075px;
+        margin: 0 auto;
+        margin-top: 50px;
+        background-color: #fff;
+        padding: 30px;
+        border-radius: 5px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .table-container h1 {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    .table-container td {
+        vertical-align: middle;
+    }
+
+    .table-container a {
+        margin-right: 10px;
+    }
+
+    .error {
+        color: red;
+    }
+</style>
+
+<body>
+    {{!-- <div class="container"> --}}
+        <div class="table-container">
+            <div class="form-container">
+                <h3>Add Product</h3>
+                <form action="" id="addProduct" method="post" enctype="multipart/form-data">
+                    <div class="form-field">
+                        <label for="name">Name:</label>
+                        <input type="text" id="name" name="name">
+                    </div>
+                    <div class="form-field">
+                        <label for="name">Description:</label>
+                        <input type="text" id="description" name="description">
+                    </div>
+                    <div class="form-field">
+                        <label for="image">Image:</label>
+                        <input type="file" id="image" name="image" accept="image/*" onchange="previewImage(event)"
+                            multiple>
+                        <div class="image-preview1"></div>
+                    </div>
+                    <div class="form-field">
+                        <label for="image">Image:</label>
+                        <input type="file" id="image1" name="image" accept="image/*" onchange="previewImage(event)"
+                            multiple>
+                        <div class="image-preview2"></div>
+                    </div>
+                    <div class="form-field">
+                        <label for="image">Image:</label>
+                        <input type="file" id="image2" name="image" accept="image/*" onchange="previewImage(event)"
+                            multiple>
+                        <div class="image-preview3"></div>
+                    </div>
+                    <div class="form-field">
+                        <label for="image">Image:</label>
+                        <input type="file" id="image3" name="image" accept="image/*" onchange="previewImage(event)"
+                            multiple>
+                        <div class="image-preview4"></div>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="name">Category:</label>
+                        <select id="category" name="category" input type="text">
+                            {{#each categoryData}}
+                            <option value={{this.name}}>{{this.name}}</option>
+                            {{/each}}
+                        </select>
+
+                    </div>
+
+                    <div class="form-field">
+                        <label for="name">Price:</label>
+                        <input type="number" id="price" name="price">
+                    </div>
+                    <div class="form-field">
+                        <label for="name">Brand:</label>
+                        <input type="text" id="brand" name="brand">
+                    </div>
+                    <div class="form-field">
+                        <label for="name">Quantity:</label>
+                        <input type="number" id="quantity" name="quantity">
+                    </div>
+
+                    <div>
+                        <h6>
+                            <p style="color: green;">
+                                {{message}}
+                            </p>
+                        </h6>
+                    </div>
+
+                    <div>
+                        <h6 style="color: rgb(202, 14, 14);">
+                            {{message1}}
+                        </h6>
+                    </div>
+                    <button class="submit-button" type="submit">Submit</button>
+                    <a href="/admin/dashboard" class="btn btn-edit">Go Back</a>
+                </form>
+            </div>
+
+        </div>
+    {{!-- </div> --}}
+    
+
+    <script>
+        function previewImage(event) {
+            const preview = document.querySelector('.image-preview1');
+            preview.innerHTML = '';
+            const file = event.target.files[0];
+            const reader = new FileReader();
+            reader.onload = function (event) {
+                const img = new Image();
+                img.src = event.target.result;
+                img.style.width = '100%';
+                img.style.height = '100%';
+                preview.appendChild(img);
+            };
+            reader.readAsDataURL(file);
+
+
+            const preview = document.querySelector('.image-preview2');
+            preview.innerHTML = '';
+            const file = event.target.files[0];
+            const reader = new FileReader();
+            reader.onload = function (event) {
+                const img = new Image();
+                img.src = event.target.result;
+                img.style.width = '100%';
+                img.style.height = '100%';
+                preview.appendChild(img);
+            };
+            reader.readAsDataURL(file);
+        }
+
+    </script>
+    <script src="https://code.jquery.com/jquery-3.7.0.js"
+        integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM=" crossorigin="anonymous"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+
+            $.validator.addMethod("numbersOnly", function (value, element) {
+                return this.optional(element) || /^\d+$/.test(value);
+            });
+
+            //category
+            $("#addProduct").validate({
+                rules: {
+                    name: {
+                        required: true,
+
+                    },
+                    description: {
+                        required: true,
+
+                    },
+                    image: {
+                        required: true,
+
+                    },
+                    image1: {
+                        required: true,
+
+                    },
+                    image2: {
+                        required: true,
+
+                    },
+                    image3: {
+                        required: true,
+
+                    },
+                    category: {
+                        required: true,
+                    },
+                    price: {
+                        required: true,
+                        numbersOnly: true
+
+                    },
+
+                    brand: {
+                        required: true,
+                    },
+
+                    quantity: {
+                        required: true,
+                    }
+
+
+                },
+                messages: {
+
+                    name: {
+
+                        required: "Enter valid name",
+                    },
+                    description: {
+                        required: "Please enter description ",
+
+                    },
+                    image: {
+
+                        required: "Choose valid image"
+
+                    },
+                    image1: {
+                        required: "Choose valid image"
+                    },
+                    image2: {
+                        required: "Choose valid image"
+                    },
+                    image3: {
+                        required: "Choose valid image"
+                    },
+                    category: {
+                        required: "Select the category",
+                    },
+                    price: {
+                        required: "Enter the price",
+                        numbersOnly: "please enter numbers"
+                    },
+
+                    brand: {
+                        required: "Enter the brand",
+                    },
+
+                    quantity: {
+                        required: "enter the quantity",
+                    }
+                }
+            })
+        })
+    </script>
+
+     if({{res}}=='success'){
+       Swal.fire({
+                title: "Success",
+                text: "Item added successfully !",
+                icon: "success",
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "OK",
+                timer: 3000,
+            })
+    }
+    </script>
+
+
+</body>
+
+</html>
+
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.16/dist/sweetalert2.all.min.js"></script>
+
+<script>
+
+ if({{res}}=='success'){
+       Swal.fire({
+                title: "Success",
+                text: "Item added successfully !",
+                icon: "success",
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "OK",
+                timer: 3000,
+            })
+    }
+
+</script>

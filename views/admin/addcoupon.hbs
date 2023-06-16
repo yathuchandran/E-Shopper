@@ -1,0 +1,92 @@
+{{> adminHeader}}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+           <link rel="stylesheet" type="text/stylesheets"   href="/stylesheets/addcoupon.css"> 
+
+    <title>Add Coupon</title>
+</head>
+
+<style>
+
+
+form {
+    max-width: 500px;
+    margin: 0 auto;
+    font-family: Arial, sans-serif;
+    padding: 20px;
+    background-color: #f2f2f2;
+    border-radius: 10px;
+  }
+  
+  label {
+    display: block;
+    margin-bottom: 5px;
+  }
+  
+  input[type="text"],
+  input[type="date"],
+  select,
+  textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: none;
+    border-radius: 5px;
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
+    font-size: 16px;
+  }
+  
+  input[type="submit"] {
+    background-color: #4CAF50;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  input[type="submit"]:hover {
+    background-color: #3e8e41;
+  }
+
+
+</style>
+<body>
+ <h3 style="margin-left: 600px;">Add Coupon</h3>
+
+   <form action="" method="post" role="form">
+ 
+  <label for="coupon-code">Coupon Code:</label>
+  <input type="text" id="couponcode" name="code" required>
+  
+  <label for="expiry-date">Expiry Date:</label>
+  <input type="date" id="expiry-date" name="expiryDate" required>
+  
+  <label for="coupon-discount">Discount:</label>
+  <input type="text" id="discount" name="discount" required>
+
+  <label for="minBill">Minimum Bill:</label>
+  <input type="text" id="minBill" name="minBill" required>
+  
+  <label for="coupon-status">Coupon Status:</label>
+  <select id="coupon-status" name="status" required>
+    <option value="active">Active</option>
+    {{!-- <option value="expired">Expired</option> --}}
+    <option value="inactive">Inactive</option>
+  </select>
+   <p style="color: rgb(128, 0, 0);">
+          {{message}}
+        </p>
+  <input  type="submit" style="background-color: rgb(190, 132, 132);   margin-left: 150px;"  value="Add Coupon">
+</form>
+
+
+
+    
+</body>
+</html>

@@ -1,0 +1,130 @@
+{{>adminHeader}}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Add Product</title>
+    {{!--
+    <link rel="stylesheets" type="text/stylesheets" href="/stylesheets/addproduct.css"> --}}
+    <link rel="stylesheets" type="text/stylesheets" href="/stylesheets/addproduct.css">
+
+</head>
+<style>
+    .form-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+    }
+
+    /* Style the form fields */
+    .form-field {
+        margin-bottom: 1rem;
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+    }
+
+    /* Style the label */
+    .form-field label {
+        margin-bottom: 0.5rem;
+        font-weight: bold;
+    }
+
+    /* Style the input */
+    .form-field input {
+        padding: 0.5rem;
+        border: 2px solid #000000;
+        border-radius: 4px;
+    }
+
+    /* Style the image preview */
+    .image-preview {
+        width: 200px;
+        height: 200px;
+        border: 2px solid #000000;
+        margin-bottom: 1rem;
+    }
+
+    /* Style the submit button */
+    .submit-button {
+        padding: 0.5rem;
+        background-color: #D19C97;
+        color: rgb(16, 15, 15);
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    body {
+        background-color: #f6f2f2;
+    }
+
+    .table-container {
+        max-width: 1075px;
+        margin: 0 auto;
+        margin-top: 50px;
+        background-color: #fff;
+        padding: 30px;
+        border-radius: 5px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .table-container h1 {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    .table-container td {
+        vertical-align: middle;
+    }
+
+    .table-container a {
+        margin-right: 10px;
+    }
+
+    .error {
+        color: red;
+    }
+</style>
+
+
+
+<body>
+    {{!-- <div class="container"> --}}
+        <div class="table-container">
+            <div class="form-container">
+                <h3>Add Banner</h3>
+                <form action="" id="addProduct" method="post" enctype="multipart/form-data">
+                    <div class="form-field">
+                        <label for="name">Name:</label>
+                        <input type="text" id="name" name="name">
+                    </div>
+
+                    <div class="form-field">
+                        <label for="image">Image:</label>
+                        <input type="file" id="image" name="image" accept="image/*" >
+                        <div class="image-preview1"></div>
+                    </div>
+
+
+                    <div>
+                        <h6>
+                            <p style="color: green;">
+                                {{message}}
+                            </p>
+                        </h6>
+                    </div>
+
+                    <div>
+                        <h6 style="color: rgb(202, 14, 14);">
+                            {{message1}}
+                        </h6>
+                    </div>
+                    <button class="submit-button" type="submit">Submit</button>
+                    <a href="/admin/dashboard" class="btn btn-edit">Go Back</a>
+                </form>
+            </div>
+
+        </div>
