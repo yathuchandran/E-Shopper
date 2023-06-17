@@ -1,4 +1,3 @@
-console.log(111111111111111111111111111111);
 
 const express = require ("express") 
 const user_route = express.Router();
@@ -65,6 +64,8 @@ user_route.get('/deleteaddress',auth.isLogout,  userController.deleteAddress)
 
 user_route.get("/cart",auth.isLogout,cartController.viewCart)
 user_route.post("/cart-operation",auth.isLogout,  cartController.cartOperation)
+user_route.post("/cartUpdation",auth.isLogout,  cartController.cartUpdation)
+
 user_route.post("/deleteproduct",auth.isLogout,  cartController.deleteFromCart)
 user_route.get("/checkout", auth.isLogout,  cartController.loadCheckout);
 

@@ -16,25 +16,27 @@ const { log } = require("console");
 
 //VIEW CART-------
 const viewCart = async (req, res) => {
-  console.log("viewCart",16);
+  console.log("viewCart", 16);
   try {
+    const qty = req.body.qty
+    console.log("cart count " + qty)
     const userData1 = req.session.user_id;
 
-    console.log(userData1,20);
+    console.log(userData1, 20);
     const user = await User.findById(userData1).populate("cart.product_id");
 
-    console.log(user,23);
+    console.log(user, 23);
     if (!user) {
       throw new Error("User not found");
     }
 
     const categories = await Category.find();
     const cartData = user.cart;
-    console.log(categories,30);
+    console.log(categories, 30);
 
-    console.log(cartData,32);
+    console.log(cartData, 32);
 
-    console.log(cartData.length,34,"cartData");
+    console.log(cartData.length, 34, "cartData");
 
     // Ensure that cartData is an array and not undefined
     if (!Array.isArray(cartData)) {
@@ -49,7 +51,7 @@ const viewCart = async (req, res) => {
 
     res.render("users/cart", { userData1, categories, subTotal, cartData, cartItemCount });
 
-    console.log(subTotal,46);
+    console.log(subTotal, 46);
     console.log("work aya");
 
   } catch (error) {
@@ -120,26 +122,6 @@ function findSubTotal(cartData) {
 
 
 
-
-
-///CART OPERATION (ADD)----------------------------------
-
-
-///COUPON FUNCTION
-
-//   // global function to find cart total after coupon applied
-//   function findSubTotalCoupon(cartData, discount) {
-//     let subTotalCoupon = 0; // Initialize the sum of products to 0
-
-//     // Loop through each item in the shopping cart and add its price * quantity to the sum
-//     for (let i = 0; i < cartData.length; i++) {
-//       subTotalCoupon += cartData[i].product_id.price * cartData[i].quantity;
-//       subTotalCoupon = subTotalCoupon - discount;
-//     }
-//     return subTotalCoupon;
-//   }
-
-
 //CART OPERATIONS-----------------
 
 
@@ -155,7 +137,7 @@ const cartOperation = async (req, res) => {
     data[0].cart.forEach((val, i) => {
       val.quantity = req.body.datas[i].quantity;
     });
-    console.log('count product',132 + req.body.datas[i].quantity)
+    console.log('count product', 132 + req.body.datas[i].quantity)
 
     await User.updateOne(
       { _id: userData1._id },
@@ -165,6 +147,32 @@ const cartOperation = async (req, res) => {
     res.json("from backend ,cartUpdation json");
   } catch (error) {
     console.log(error.message);
+  }
+};
+
+
+const cartUpdation = async (req, res) => {
+  try {
+    const userId = req.session.user_id;
+    const productIndex = Number(req.query.index);
+    const quantity = req.body.quantity;
+
+    if (quantity === "plus") {
+      await User.updateOne(
+        { _id: userId },
+        { $inc: { [`cart.${productIndex}.quantity`]: 1 } }
+      );
+    } else if (quantity === "minus") {
+      await User.updateOne(
+        { _id: userId },
+        { $inc: { [`cart.${productIndex}.quantity`]: -1 } }
+      );
+    }
+
+    res.status(200).json({ message: "Cart updated successfully." });
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).json({ error: "An error occurred while updating the cart." });
   }
 };
 
@@ -308,7 +316,7 @@ const loadCheckout = async (req, res) => {
 //       finalTotal = subTotal;
 //     }
 
-    
+
 
 //     if (paymentMethod == "cashondelivery") {
 //       if (cartData.length > 0) {
@@ -349,7 +357,7 @@ const loadCheckout = async (req, res) => {
 //           paymentMode: "razorpay",
 //           dateOrdered: req.body.dateOrdered,
 
-          
+
 //           discountAmt:req.body.totalAfterDiscount,
 //           coupon:req.body.search
 //         });
@@ -381,20 +389,22 @@ const loadCheckout = async (req, res) => {
 
 //   }
 // };
- 
+
 
 const placeOrder = async (req, res) => {
   try {
     const userData1 = req.session.user_id;
     const user = await User.findOne({ _id: userData1 }).populate(
-          "cart.product_id"
-         );
+      "cart.product_id"
+    );
     const cartData = user.cart;
     const paymentMethod = req.body.payment;
 
 
     await Address.findOne({ _id: userData1 });
 
+
+    const wallet = user.wallet;
 
     const cartItems = cartData.map((item) => ({
       product_id: item.product_id,
@@ -425,11 +435,11 @@ const placeOrder = async (req, res) => {
         await order.save();
         user.cart = [];
         await user.save();
-        res.json({codSuccess :true})
+        res.json({ codSuccess: true })
       } else {
         res.redirect("/shop");
       }
-    } else if(paymentMethod === "razorpay") {
+    } else if (paymentMethod === "razorpay") {
       if (cartData.length > 0) {
         const order = new Order({
           owner: userData1,
@@ -447,15 +457,58 @@ const placeOrder = async (req, res) => {
         const orderid = order._id;
         await user.save();
 
-        res.json({razorpay:true,order:order,bill:finalTotal})
+        res.json({ razorpay: true, order: order, bill: finalTotal })
+      } else {
+        res.redirect("/shop");
+      }
+    } else if (paymentMethod === "wallet") {
+
+      if (cartData.length > 0) {
+        // if (wallet >= finalTotal) {
+        const order = new Order({
+          owner: userData1,
+          items: cartItems,
+          shippingAddress: req.body.address,
+          totalBill: finalTotal,
+          status: req.body.status,
+          paymentMode: paymentMethod,
+          dateOrdered: req.body.dateOrdered,
+          discountAmt: req.body.totalAfterDiscount,
+          coupon: req.body.search,
+        });
+
+        console.log(order, "456"); // Move the console.log here
+
+        await order.save();
+
+        
+
+
+        // Deduct the amount from the user's wallet
+        user.wallet -= finalTotal;
+        await user.save();
+
+        console.log(user.wallet,"user.wallet",467);
+        user.cart = [];
+        await user.save();
+
+        console.log(user.cart,"user.cart",471)
+
+        res.json({ wallet: true, order, bill: finalTotal });
+        // } else {
+        //   res.status(400).json({ message: "Insufficient wallet balance" });
+        // }
       } else {
         res.redirect("/shop");
       }
     }
+
   } catch (error) {
     console.log(error.message);
   }
 };
+
+
 
 //PAYMENT
 
@@ -514,9 +567,9 @@ const paymentverify = async (req, res) => {
 //ORDER SUCCESS
 const loadOrderSuccess = async (req, res) => {
   try {
-   const shippingAddress= req.body.address1
+    const shippingAddress = req.body.address1
 
-   console.log(shippingAddress,466,"shippingAddress");
+    console.log(shippingAddress, 466, "shippingAddress");
     const userData1 = req.session.user_id;
     res.render("users/ordersuccess", { userData1 });
   } catch (error) {
@@ -531,31 +584,31 @@ const loadOrderSuccess = async (req, res) => {
 
 
 
-const loadWishlist = async (req,res)=>{
-  try{
+const loadWishlist = async (req, res) => {
+  try {
 
-      const userData = req.session.user_id;
-      const userId = userData
-      const categoryData = await Category.findOne({ is_blocked:false })
-     
-      const user = await User.findById(userId).populate('wishlist.product_id')
-      const wishlistItems = user.wishlist
+    const userData = req.session.user_id;
+    const userId = userData
+    const categoryData = await Category.findOne({ is_blocked: false })
 
-      const userCart = await User.findOne({ _id: userId }).populate("cart.product_id").lean();
-      const cart = userCart.cart;
+    const user = await User.findById(userId).populate('wishlist.product_id')
+    const wishlistItems = user.wishlist
 
-      if(wishlistItems.length === 0){
+    const userCart = await User.findOne({ _id: userId }).populate("cart.product_id").lean();
+    const cart = userCart.cart;
 
-          res.render('users/emptyWishlist',{ userData, categoryData})
+    if (wishlistItems.length === 0) {
 
-      }else{
+      res.render('users/emptyWishlist', { userData, categoryData })
 
-          res.render('users/wishlist',{ userData, categoryData, cart, wishlistItems})
+    } else {
 
-      }
-      
-  }catch(error){
-      console.log(error.message);
+      res.render('users/wishlist', { userData, categoryData, cart, wishlistItems })
+
+    }
+
+  } catch (error) {
+    console.log(error.message);
   }
 }
 
@@ -567,9 +620,9 @@ const addToWishlist = async (req, res) => {
   try {
     const userId = req.session.user_id;
     const { productId, cartId } = req.body;
-  
-    const user = await User.findOne({ _id:userId});
-  
+
+    const user = await User.findOne({ _id: userId });
+
 
     if (!user) {
       return res.status(404).json({
@@ -577,16 +630,16 @@ const addToWishlist = async (req, res) => {
       });
     }
 
-    const existItem = user.wishlist.includes({product_id:productId});
+    const existItem = user.wishlist.includes({ product_id: productId });
 
     if (!existItem) {
-      user.wishlist.push({product_id:productId});
+      user.wishlist.push({ product_id: productId });
       await user.save();
 
-      
+
       await Product.updateOne({ _id: productId }, { isWishlisted: true });
       await Product.findOneAndUpdate({ _id: productId }, { $set: { isOnCart: false } });
-      
+
       res.status(200).json({
         message: "Added to wishlist"
       });
@@ -650,40 +703,40 @@ const addToCartFromWishlist = async (req, res) => {
 
 
 
-const removeWishlist = async (req,res) =>{
+const removeWishlist = async (req, res) => {
 
-  try{
+  try {
 
-      const userId = req.session.user_id
-      const productId = req.params.id
+    const userId = req.session.user_id
+    const productId = req.params.id
 
-     const user = await User.findById(userId)
-      const itemIndex = user.wishlist.indexOf(productId)
+    const user = await User.findById(userId)
+    const itemIndex = user.wishlist.indexOf(productId)
 
-      if(itemIndex>=-1){
-
-
-        user.wishlist.splice(itemIndex, 1);
-        await user.save();
+    if (itemIndex >= -1) {
 
 
-          await User.updateOne({ _id: userId }, { $pull: { wishlist: productId }})
-          await Product.updateOne({ _id: productId }, { isWishlisted: false })
+      user.wishlist.splice(itemIndex, 1);
+      await user.save();
 
-          res.status(200).json({
-            message: "success",
-          });
-      }else{
-        res.status(404).json({
-          message: "Product not found in the wishlist.",
-          })
-      }
 
-  }catch(error){
-      console.log(error.message);
-      res.status(500).json({
-        message: "Internal Server Error",
+      await User.updateOne({ _id: userId }, { $pull: { wishlist: productId } })
+      await Product.updateOne({ _id: productId }, { isWishlisted: false })
+
+      res.status(200).json({
+        message: "success",
       });
+    } else {
+      res.status(404).json({
+        message: "Product not found in the wishlist.",
+      })
+    }
+
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).json({
+      message: "Internal Server Error",
+    });
   }
 }
 
@@ -711,7 +764,7 @@ module.exports = {
   addToWishlist,
   addToCartFromWishlist,
   removeWishlist,
-
+  cartUpdation
 
 
 }

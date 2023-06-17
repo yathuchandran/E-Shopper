@@ -7,7 +7,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Products</title>
+  <title>Banner</title>
   <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.5.0/css/bootstrap.min.css">
   <!-- Custom CSS -->
@@ -113,18 +113,8 @@
             <td>{{this.name}}</td>
             <td><img src="/uploads/{{this.image.[0]}}" alt="{{this.image}}" width="100px" height="100px"></td>
 
-            <td>
-              <a href="/admin/editproduct?id={{this.id}}" class="btn btn-edit">Edit</a>
-              {{!-- <a href="#" class="btn btn-delete">Block</a> --}}
-              {{!-- <a href="/admin/blockproduct?id={{this.id}}" class="btn btn-delete">Block</a> --}}
-              {{#if this.is_blocked }}
-
-              <a href="/admin/blockproduct/{{this._id}}" class="btn btn-success">Unblock</a>
-              {{else}}
-
-              <a href="/admin/blockproduct/{{this._id}}" class="btn btn-delete">Block</a>
-              {{/if}}
-            </td>
+<td><button onclick="deletebanner('{{this._id}}')" class="btn btn-danger">Delete</button></td>
+           
           </tr>
 
           {{/each}}
@@ -140,3 +130,30 @@
   <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
   <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
   <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
+
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.16/dist/sweetalert2.all.min.js"></script>
+
+
+<script>
+   function deletebanner(banner){
+     
+     console.log("hai")
+      fetch('/admin/removebanner',{
+        method: 'POST',
+        headers:{
+          'Content-Type' : 'application/json'            
+        },
+        body: JSON.stringify({
+            banner:banner
+        })
+      })
+
+      .then((res) => res.json())
+      .then((res) => window.location.reload())
+      .catch(error => console.error(error))
+    }
+  </script>
+
+
+
+

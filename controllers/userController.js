@@ -9,7 +9,7 @@ const Address = require("../model/addressModel");
 const Order = require("../model/orderModel");
 const PDFDocument = require("pdfkit");
 const banner = require("../model/bannerModel");
-
+const razorpay = require('razorpay')
 
 //const moment = require("moment");
 
@@ -1039,11 +1039,46 @@ const orderHistoryDetails = async (req, res) => {
 };
 
 
-
+let  paymentMethod
 
 //CANCEL ORDER
 const orderCancel = async (req, res) => {
   try {
+    const userId=req.session.user_id;
+    const userData=await User.findById(userId)
+    const orderId=req.body.id
+
+    const orderData= await Order.findById(orderId)
+    const paymentMethod = orderData.paymentMode
+    const currentBalance=orderData.wallet
+    const refundAmount =orderData.totalBill;
+
+    console.log(orderData,1056,"jfbih");
+    console.log(currentBalance,1057,"fkjbqihge");
+
+    console.log(refundAmount,1059,"sadfkqguo");
+
+
+    const updateTotalAmount=currentBalance+refundAmount
+    console.log(updateTotalAmount,1058);
+
+    if(paymentMethod == "razorpay" ||paymentMethod =="wallet"){
+      console.log('this is inside if')
+      const updatewalletAmount=await User.findByIdAndUpdate(
+
+        userData._id,
+        {$set:{wallet:updateTotalAmount}},
+        {new:true})
+
+        console.log("order completed");
+      
+    }
+
+    
+
+    
+
+
     const { id } = req.body;
     const updatedData = await Order.findByIdAndUpdate(
       { _id: id },

@@ -29,7 +29,7 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.all.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.all.min.js"></script>
 
 </head>
 
@@ -373,18 +373,18 @@
 
 
                         {{!-- COUPON APPLY --}}
-                        
-<div class="input-group">
-    <input type="text" class="form-control p-4" id="couponInput" class="rounded"
-        placeholder="Enter Coupon" name="search">
-    <div class="input-group-append">
-        <button type="button" id="couponButton" class="btn btn-primary btn-sm"> Apply Coupon</button>
-    </div>
-</div>
 
-<div class="col-md-3 offset-md-3">
-    <div id="item_card" class="text-danger text-left"></div>
-</div>
+                        <div class="input-group">
+                            <input type="text" class="form-control p-4" id="couponInput" class="rounded"
+                                placeholder="Enter Coupon" name="search">
+                            <div class="input-group-append">
+        <button type="button" id="couponButton" class="btn btn-primary btn-sm"> Apply Coupon</button>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3 offset-md-3">
+                            <div id="item_card" class="text-danger text-left"></div>
+                        </div>
 
                         {{!-- <div id="item_card"></div> --}}
                         {{!-- <div class="row">
@@ -452,46 +452,36 @@
 
 
                             <body>
-                                <div class="card border-secondary mb-5">
-                                    <div class="card-header bg-secondary border-0">
-                                        <h4 class="font-weight-semi-bold m-0">Payment</h4>
-                                    </div>
-                                    <div class="payment-options">
-                                        {{!-- <div class="form-group">
-                                            <div class="custom-control custom-radio">
-                                                <input type="radio" class="custom-control-input" name="pay" id="paypal">
-                                                <label class="custom-control-label" for="paypal">Paypal</label>
-                                            </div>
-                                        </div> --}}
-                                        <div class="form-group">
-                                            <div class="custom-control custom-radio">
-                                                <input type="radio" class="custom-control-input" name="pay"
-                                                    id="cashondelivery" value="cashondelivery" required>
-                                                <label class="custom-control-label" for="cashondelivery">Cash on
-                                                    Delivery</label>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <div class="custom-control custom-radio">
-                                                <input type="radio" class="custom-control-input" name="pay"
-                                                    id="razorpay" value="razorpay" required>
-                                                <label class="custom-control-label" for="razorpay">Razorpay</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    {{!-- <input hidden class="totalAfterDiscount rzp-button1 " type="text"
-                                        name="totalAfterDiscount rzp-button1"> --}}
-                                    <input hidden class="totalAfterDiscount rzp-button1" type="text" id="rzp-button1"
-                                        name="totalAfterDiscount rzp-button1">
+                               <div class="card border-secondary mb-5">
+    <div class="card-header bg-secondary border-0">
+        <h4 class="font-weight-semi-bold m-0">Payment</h4>
+    </div>
+    <div class="payment-options">
+        <div class="form-group">
+            <div class="custom-control custom-radio">
+                <input type="radio" class="custom-control-input" name="pay" id="wallet" value="wallet">
+                <label class="custom-control-label" for="wallet">Wallet</label>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="custom-control custom-radio">
+                <input type="radio" class="custom-control-input" name="pay" id="cashondelivery" value="cashondelivery" required>
+                <label class="custom-control-label" for="cashondelivery">Cash on Delivery</label>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="custom-control custom-radio">
+                <input type="radio" class="custom-control-input" name="pay" id="razorpay" value="razorpay" required>
+                <label class="custom-control-label" for="razorpay">Razorpay</label>
+            </div>
+        </div>
+    </div>
+    <input hidden class="totalAfterDiscount rzp-button1" type="text" id="rzp-button1" name="totalAfterDiscount rzp-button1">
 
-                                    <div class="card-footer border-secondary bg-transparent">
-                                        <button type="submit"
-                                            class="btn btn-lg btn-block btn-primary font-weight-bold my-3 py-3">Place
-                                            Order</button>
-
-
-
-                                    </div>
+    <div class="card-footer border-secondary bg-transparent">
+        <button type="submit" class="btn btn-lg btn-block btn-primary font-weight-bold my-3 py-3" id="placeOrderBtn">Place Order</button>
+    </div>
+</div>
             </form>
         </div>
 </body>
@@ -696,15 +686,16 @@
 
 <script>
     const placeOrderForm = document.getElementById("placeOrderForm");
+    const placeOrderBtn = document.getElementById("placeOrderBtn");
 
-    placeOrderForm.addEventListener("submit", async (event) => {
+    placeOrderBtn.addEventListener("click", async (event) => {
         event.preventDefault();
 
         const paymentOptions = document.getElementsByName("pay");
         const selectedPaymentMethod = Array.from(paymentOptions)
             .find(option => option.checked)
             ?.value;
-
+        console.log(selectedPaymentMethod,'this is payment option')
         const addressOptions = document.getElementsByName("address1");
         const selectedAddress = Array.from(addressOptions)
             .find(option => option.checked)
@@ -712,37 +703,41 @@
 
         const totalAfterDiscount = document.querySelector(".totalAfterDiscount").value;
 
-        const formData = new FormData();
-        formData.append("payment", selectedPaymentMethod);
-        formData.append("totalAfterDiscount", totalAfterDiscount);
-        if (formData && selectedPaymentMethod && selectedAddress) {
-            fetch("/checkout", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    formData: formData,
-                    payment: selectedPaymentMethod,
-                    address: selectedAddress
-                })
-            })
-                .then(response => response.json())
-                .then(data => {
-                    // Handle the response data here
-                    if (data.codSuccess) {
-                        window.location.href = '/ordersuccess'
-                    } else if (data.razorpay) {
-                        razorpay(data.order, data.bill)
+        if (selectedPaymentMethod && selectedAddress) {
+            const formData = new FormData();
+            formData.append("payment", selectedPaymentMethod);
+            formData.append("totalAfterDiscount", totalAfterDiscount);
 
-                    } else {
-                        alert("please choose another option")
-                    }
-                })
-                .catch(error => {
-                    console.error("Error placing order:", error);
+            const data = {
+                formData: formData,
+                payment: selectedPaymentMethod,
+                address: selectedAddress
+            };
+
+            try {
+                const response = await fetch("/checkout", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(data)
                 });
 
+                if (response.ok) {
+                    const responseData = await response.json();
+                    if (responseData.codSuccess) {
+                        window.location.href = '/ordersuccess';
+                    } else if (responseData.razorpay) {
+                        razorpay(responseData.order, responseData.bill);
+                    } else {
+                        alert("Please choose another option");
+                    }
+                } else {
+                    throw new Error("Network response was not ok");
+                }
+            } catch (error) {
+                console.error("Error placing order:", error);
+            }
         } else {
             swal({
                 title: "Address is not found",
@@ -767,70 +762,70 @@
 {{!-- COUPON APPLY FETCH --}}
 <script>
     console.log(735);
-     const couponBtn = document.getElementById('couponButton');
+    const couponBtn = document.getElementById('couponButton');
     const couponInput = document.getElementById('couponInput');
     const totalInput = document.getElementById('total')
     const totalAfterDiscount = document.querySelector('.totalAfterDiscount');
 
 
     couponBtn.addEventListener('click', async () => {
-    const couponValue = couponInput.value.trim();
-    const totalValue = totalInput.textContent.trim();
+        const couponValue = couponInput.value.trim();
+        const totalValue = totalInput.textContent.trim();
 
-    if (couponValue !== '') {
-        try {
-            const response = await fetch(`/coupon?couponval=${couponValue}&total=${totalValue}`, {
-                headers: {
-                    "Content-Type": "application/json"
-                }
-            });
-
-            if (response.ok) {
-                const data = await response.json();
-                if (data) {
-                    if (data.success) {
-                        const discount = document.getElementById('discount');
-                        const newTotal = document.getElementById('newtotal');
-                        discount.innerHTML = data.discount;
-                        newTotal.innerHTML = data.newTotal;
-                        totalAfterDiscount.value = data.newTotal;
-
-                        // Display success alert using SweetAlert
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Coupon Applied',
-                            text: data.message
-                        });
-
-                        const cardItem = document.getElementById('item_card');
-                        cardItem.innerHTML = data.message;
-                    } else {
-                        // Display error alert using SweetAlert
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Coupon Error',
-                            text: 'Coupon was not applied successfully.'
-                        });
+        if (couponValue !== '') {
+            try {
+                const response = await fetch(`/coupon?couponval=${couponValue}&total=${totalValue}`, {
+                    headers: {
+                        "Content-Type": "application/json"
                     }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data) {
+                        if (data.success) {
+                            const discount = document.getElementById('discount');
+                            const newTotal = document.getElementById('newtotal');
+                            discount.innerHTML = data.discount;
+                            newTotal.innerHTML = data.newTotal;
+                            totalAfterDiscount.value = data.newTotal;
+
+                            // Display success alert using SweetAlert
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Coupon Applied',
+                                text: data.message
+                            });
+
+                            const cardItem = document.getElementById('item_card');
+                            cardItem.innerHTML = data.message;
+                        } else {
+                            // Display error alert using SweetAlert
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Coupon Error',
+                                text: 'Coupon was not applied successfully.'
+                            });
+                        }
+                    }
+                } else {
+                    // Display error alert using SweetAlert
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Network Error',
+                        text: 'Network response was not OK.'
+                    });
                 }
-            } else {
+            } catch (error) {
                 // Display error alert using SweetAlert
                 Swal.fire({
                     icon: 'error',
-                    title: 'Network Error',
-                    text: 'Network response was not OK.'
+                    title: 'Error',
+                    text: 'An error occurred.'
                 });
             }
-        } catch (error) {
-            // Display error alert using SweetAlert
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'An error occurred.'
-            });
         }
-    }
-});
+    });
 
     console.log(couponBtn, "couponBtn");
 

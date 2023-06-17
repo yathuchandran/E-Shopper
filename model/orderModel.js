@@ -38,7 +38,7 @@ const orderSchema = new mongoose.Schema({
   },
   paymentMode: {
     type: String,
-    enum: ["cashondelivery", "razorpay", "pending"],
+    enum: ["cashondelivery", "razorpay", "wallet","pending"],
     default: "pending",
   },
   dateOrdered: {
@@ -50,7 +50,8 @@ const orderSchema = new mongoose.Schema({
   },
   coupon: {
     type: String,
-  }
+  },
+  
 });
 
 module.exports = mongoose.model("order", orderSchema); //can be used anywhere in the project

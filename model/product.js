@@ -36,7 +36,7 @@ const productSchema = new mongoose.Schema({
     },
     isWishlisted:{
       type:Boolean,
-      default:false
+      required:false
   }
   });
   mongoose.model("Product", productSchema);

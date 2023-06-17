@@ -445,6 +445,9 @@
 
 
 <script>
+
+    let cartData = []
+
     const plusButtons = document.querySelectorAll('.plus-btn');
     const minusButtons = document.querySelectorAll('.minus-btn');
     const inputValues = document.querySelectorAll('.qty-input');
@@ -452,23 +455,46 @@
     const cartPrice = document.querySelectorAll('.cart__price')
     const total = document.querySelector('.total')
 
-    plusButtons.forEach((button, index) => {
-        button.addEventListener('click', () => {
-            inputValues[index].value++;
-            subTotal.innerHTML = Number(subTotal.innerHTML) + Number(cartPrice[index].innerHTML)
-            total.innerHTML = subTotal.innerHTML
-        });
-    });
+    plusButtons.forEach(async (button, index) => {
+  button.addEventListener('click', async () => {
+    inputValues[index].value++;
+    subTotal.innerHTML = Number(subTotal.innerHTML) + Number(cartPrice[index].innerHTML);
+    total.innerHTML = subTotal.innerHTML;
 
-    minusButtons.forEach((button, index) => {
-        button.addEventListener('click', () => {
-            if (inputValues[index].value != 1) {
-                inputValues[index].value--;
-                subTotal.innerHTML = Number(subTotal.innerHTML) - Number(cartPrice[index].innerHTML)
-                total.innerHTML = subTotal.innerHTML
-            }
-        });
+    await fetch(`/cartUpdation?index=${index}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        quantity: "plus",
+      }),
     });
+  });
+});
+
+
+    minusButtons.forEach(async (button, index) => {
+  button.addEventListener('click', async () => {
+    if (inputValues[index].value != 1) {
+      inputValues[index].value--;
+
+      subTotal.innerHTML = Number(subTotal.innerHTML) - Number(cartPrice[index].innerHTML);
+      total.innerHTML = subTotal.innerHTML;
+
+      await fetch(`/cartUpdation?index=${index}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          quantity: "minus",
+        }),
+      });
+    }
+  });
+});
+
 
 
     

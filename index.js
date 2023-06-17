@@ -4,9 +4,7 @@ const app = express();
 const hbs = require("hbs")
 const path = require("path");
 const morgan = require('morgan')
-//const morgan = require('morgan')
-//app.use(morgan('combined'));
-
+const razorpay = require('razorpay')
 
 
 mongoose.connect("mongodb+srv://yatheeshbc8:sanidhya*88@cluster0.sjvvmgl.mongodb.net/?retryWrites=true&w=majority");
