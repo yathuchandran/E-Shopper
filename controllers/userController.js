@@ -793,6 +793,10 @@ const loadProfile = async (req, res) => {
       const id = userData1;
   
       const userData = await User.findById(id);
+      const currentBalance=userData.wallet
+
+      console.log(currentBalance,"currentBalance",798);
+
   
       if (!userData) {
         res.redirect("/logout");
@@ -805,6 +809,7 @@ const loadProfile = async (req, res) => {
           userData,
           userData1,
           categories,
+          currentBalance,
           isLogged: req.session.userName
         });
       }
@@ -1050,14 +1055,8 @@ const orderCancel = async (req, res) => {
 
     const orderData= await Order.findById(orderId)
     const paymentMethod = orderData.paymentMode
-    const currentBalance=orderData.wallet
+    const currentBalance=userData.wallet
     const refundAmount =orderData.totalBill;
-
-    console.log(orderData,1056,"jfbih");
-    console.log(currentBalance,1057,"fkjbqihge");
-
-    console.log(refundAmount,1059,"sadfkqguo");
-
 
     const updateTotalAmount=currentBalance+refundAmount
     console.log(updateTotalAmount,1058);
@@ -1096,6 +1095,31 @@ const orderCancel = async (req, res) => {
 // Return Order
 const orderReturn = async (req, res) => {
   try {
+
+    const userId=req.session.user_id;
+    const userData=await User.findById(userId)
+    const orderId=req.body.id
+
+    const orderData= await Order.findById(orderId)
+    const paymentMethod = orderData.paymentMode
+    const currentBalance=userData.wallet
+    const refundAmount =orderData.totalBill;
+
+    const updateTotalAmount=currentBalance+refundAmount
+    console.log(updateTotalAmount,1058);
+
+    
+      const updatewalletAmount=await User.findByIdAndUpdate(
+
+        userData._id,
+        {$set:{wallet:updateTotalAmount}},
+        {new:true})
+
+        console.log("order completed");
+      
+
+
+
     const { id } = req.body;
     const updatedData = await Order.findByIdAndUpdate(
       id,

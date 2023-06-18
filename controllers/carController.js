@@ -10,6 +10,7 @@ const Razorpay = require("razorpay");
 const { trusted } = require("mongoose");
 const mongoose = require('mongoose');
 const { log } = require("console");
+const product = require("../model/product");
 
 
 
@@ -45,6 +46,7 @@ const viewCart = async (req, res) => {
 
     const cartItemCount = cartData.length;
     console.log('Cart Item Count:', cartItemCount);
+
 
     const subTotal = findSubTotal(cartData);
 
@@ -152,15 +154,19 @@ const cartOperation = async (req, res) => {
 
 
 const cartUpdation = async (req, res) => {
+
   try {
     const userId = req.session.user_id;
     const productIndex = Number(req.query.index);
     const quantity = req.body.quantity;
+    
+    console.log("haaaaii",163);
 
     if (quantity === "plus") {
       await User.updateOne(
         { _id: userId },
         { $inc: { [`cart.${productIndex}.quantity`]: 1 } }
+       
       );
     } else if (quantity === "minus") {
       await User.updateOne(
@@ -168,7 +174,7 @@ const cartUpdation = async (req, res) => {
         { $inc: { [`cart.${productIndex}.quantity`]: -1 } }
       );
     }
-
+   
     res.status(200).json({ message: "Cart updated successfully." });
   } catch (error) {
     console.log(error.message);

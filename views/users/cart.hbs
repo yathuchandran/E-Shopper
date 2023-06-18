@@ -31,20 +31,17 @@
 
 </head>
 <style>
+    .plus-btn:hover {
+        background-color: #bb8e8e;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
+    }
 
-   
-
-.plus-btn:hover {
-  background-color: #bb8e8e;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
-}
-.minus-btn:hover{
-     background-color: #be7c7c;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
-}
-
-
+    .minus-btn:hover {
+        background-color: #be7c7c;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
+    }
 </style>
+
 <body>
 
     <div class="row align-items-center py-3 px-xl-5">
@@ -76,7 +73,7 @@
             </a>
             <a href="/cart" class="btn border">
                 <i class="fas fa-shopping-cart text-primary"></i>
-                 <span class="badge">{{this.cartItemCount}}</span> 
+                <span class="badge">{{this.cartItemCount}}</span>
             </a>
         </div>
     </div>
@@ -224,6 +221,16 @@
                             <td class="cart__product__item">
                                 <img src="/uploads/{{this.product_id.image.[0]}}" alt="{{this.product_id.image}}"
                                     width="100px" height="100px">
+
+                                <p id="message"></p>
+
+                                <style>
+                                    #message {
+                                        color: red;
+                                    }
+                                </style>
+
+
                                 <div class="cart__product__item__title">
                                     <h6>{{this.product_id.name}}</h6>
                                     <div class="rating">
@@ -243,24 +250,38 @@
 
 
 
-                            
+
 
                             <td class="cart__quantity">
-                              
-  <div class="quantity d-flex align-items-center justify-content-center">
-    <!-- minus button -->
-    <button class="minus-btn" type="button"><i class="fa fa-minus-circle"></i></button>
 
-    <!-- quantity -->
-    <input type="number" id="{{this.product_id._id}}" class="qty-input"
-      style="width:50px;padding-left: 12px;" style="width: 30px;" name="num-product"
-      value="{{this.quantity}}" min="1" max="{{this.product_id.quantity}}" readonly>
+                                <div class="quantity d-flex align-items-center justify-content-center">
+                                    <!-- minus button -->
+                                    <button class="minus-btn" type="button"><i class="fa fa-minus-circle"></i></button>
 
-    <!-- plus button -->
-    <button class="plus-btn" type="button">
-      <i class="fas fa-plus-circle"></i>
-    </button>
-  </div>
+                                    <!-- quantity -->
+                                    <input type="number" name="count" id="{{this.product_id._id}}" class="qty-input"
+                                        style="width:50px;padding-left: 12px;" style="width: 30px;"
+                                        value="{{this.quantity}}" min="1" max="{{this.product_id.quantity}}" readonly>
+
+                                    <!-- plus button -->
+                                    <button class="plus-btn" type="button">
+                                        <i class="fas fa-plus-circle"></i>
+                                    </button>
+
+
+                                    <script>
+                                        const inputElement = document.getElementsByName("count")[0]; // Use index [0] if there's only one element with the name "count"
+                                        const value = inputElement.value;
+                                        const cartCount = "{{this.product_id.quantity}}";
+
+                                        if (value >= cartCount) {
+                                            const messageElement = document.getElementById("message");
+                                            messageElement.innerHTML = "Product is OutOfStock";
+
+                                        }
+                                    </script>
+
+                                </div>
 
 
                             </td>
@@ -456,48 +477,48 @@
     const total = document.querySelector('.total')
 
     plusButtons.forEach(async (button, index) => {
-  button.addEventListener('click', async () => {
-    inputValues[index].value++;
-    subTotal.innerHTML = Number(subTotal.innerHTML) + Number(cartPrice[index].innerHTML);
-    total.innerHTML = subTotal.innerHTML;
+        button.addEventListener('click', async () => {
+            inputValues[index].value++;
+            subTotal.innerHTML = Number(subTotal.innerHTML) + Number(cartPrice[index].innerHTML);
+            total.innerHTML = subTotal.innerHTML;
 
-    await fetch(`/cartUpdation?index=${index}`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        quantity: "plus",
-      }),
+            await fetch(`/cartUpdation?index=${index}`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    quantity: "plus",
+                }),
+            });
+        });
     });
-  });
-});
 
 
     minusButtons.forEach(async (button, index) => {
-  button.addEventListener('click', async () => {
-    if (inputValues[index].value != 1) {
-      inputValues[index].value--;
+        button.addEventListener('click', async () => {
+            if (inputValues[index].value != 1) {
+                inputValues[index].value--;
 
-      subTotal.innerHTML = Number(subTotal.innerHTML) - Number(cartPrice[index].innerHTML);
-      total.innerHTML = subTotal.innerHTML;
+                subTotal.innerHTML = Number(subTotal.innerHTML) - Number(cartPrice[index].innerHTML);
+                total.innerHTML = subTotal.innerHTML;
 
-      await fetch(`/cartUpdation?index=${index}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          quantity: "minus",
-        }),
-      });
-    }
-  });
-});
+                await fetch(`/cartUpdation?index=${index}`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        quantity: "minus",
+                    }),
+                });
+            }
+        });
+    });
 
 
 
-    
+
 
 
 
@@ -653,4 +674,3 @@
     }
 
 </script>
-

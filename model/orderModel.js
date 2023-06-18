@@ -51,7 +51,14 @@ const orderSchema = new mongoose.Schema({
   coupon: {
     type: String,
   },
+  wallet: {
+    type: Number,
+  },
   
 });
 
 module.exports = mongoose.model("order", orderSchema); //can be used anywhere in the project
+
+
+
+
