@@ -55,9 +55,13 @@ input[type=submit] {
     <input type="text" id="name" name="name" value="{{userData.name}}" placeholder="Enter your name" required >
 
 
-    <label for="email">Email</label>
+    {{!-- <label for="email">Email</label>
     <input type="email" id="email" name="email" value="{{userData.email}}" placeholder="Enter your email" readonly>
-  
+   --}}
+   <label for="email">Email</label>
+    <input type="email" id="email" name="email" value="{{userData.email}}" placeholder="Enter your email" >
+     <div  style="color: red;" class="error"></div>
+
 
     <label for="mobile">Mobile</label>
     <input type="tel" id="mobile" name="mobile" value="{{userData.mobile}}" placeholder="Enter your mobile number" >

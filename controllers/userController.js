@@ -85,24 +85,31 @@ const securePassword = async (password) => {
 //for reset send mail function--------------------------------------------------------------------------
 const sendResetPasswordMail = async (name, email, token) => {
     try {
-
+ 
+      console.log("sendResetPasswordMail",89);
 
         const transporter = nodemailer.createTransport({
-           service:"gmail",
-            auth: {
-                user:config.emailUser,
-                pass:config.emailPassword
-            }
+          service:'gmail',
+          auth: {
+            user: "yatheesh.bc8@gmail.com",
+            pass: "cslrrwsbkjxphibf"
+          }
         });
+        console.log(transporter,"transporter",98);
+
+        const otp = generateOTP(); // Assuming you have a function to generate the OTP
+        console.log(otp,"otp",101);
         
         const mailoptions = {
-            from:config.emailUser,
-            to: email,
+          from: "yatheesh.bc8@gmail.com",
+          to: email,
             subject: 'for Reset Password mail',
             text: `${otp}`
+            
             //html: '<p>hii' + name + ', please click to <a href="http://127.0.0.1:3000/forget-password?token=' + token + '">Reset  </a> your password</p>'
 
         }
+        console.log(mailoptions,"mailoptions",110);
         transporter.sendMail(mailoptions, function (error, info) {
             if (error) {
                 console.log("error while sending email:" , error)
@@ -114,6 +121,7 @@ const sendResetPasswordMail = async (name, email, token) => {
             return otp;
         })
 
+        console.log(transporter,"transporter",122);
     } catch (error) {
         console.log(error.message);
     }
@@ -857,6 +865,7 @@ const loadEditProfile = async (req, res) => {
 
   //USER PROFILE EDIT------------------
 const editProfile = async (req, res) => {
+  console.log("hello edit");
   try {
     const userData1 = req.session.user_id;
 
@@ -1200,14 +1209,18 @@ const forgetVerify = async (req, res) => {
 }
 
 const forgetPasswordOtpLoad=async(req,res)=>{
+  console.log("forgetPasswordOtpLoad")
     try {
         res.render('users/otpforgotpassword')
     } catch (error) {
         console.log(error.message);
     }
 }
+
 const forgetVerifyotp=async(req,res)=>{
+  console.log("forgetVerifyotp");
     const forgototp=req.body.otp
+    console.log(forgototp);
     try {
         if(otp==forgototp){
             res.render('users/resetpassword1')

@@ -487,9 +487,7 @@ const placeOrder = async (req, res) => {
 
         await order.save();
 
-        
-
-
+      
         // Deduct the amount from the user's wallet
         user.wallet -= finalTotal;
         await user.save();
@@ -500,10 +498,9 @@ const placeOrder = async (req, res) => {
 
         console.log(user.cart,"user.cart",471)
 
-        res.json({ wallet: true, order, bill: finalTotal });
-        // } else {
-        //   res.status(400).json({ message: "Insufficient wallet balance" });
-        // }
+        res.json({ codeSuccess: true })
+        //res.json({ wallet: true, order, bill: finalTotal });
+       
       } else {
         res.redirect("/shop");
       }
