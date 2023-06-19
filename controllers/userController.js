@@ -11,17 +11,59 @@ const PDFDocument = require("pdfkit");
 const banner = require("../model/bannerModel");
 const razorpay = require('razorpay')
 
+// const nodemailer = require('nodemailer');
+
 //const moment = require("moment");
 
 
 
 let userRegData;
-const otp = `${Math.floor(1000 + Math.random() * 90000)}`
+function generateOTP(){
+return otp = `${Math.floor(1000 + Math.random() * 90000)}`
+}
 
 let resetMail
 
+//for send mail  function-------------------------------------------------------------------------------------------
+
+const sendVerifyMail = async (name, email, res) => {
+  console.log("sendVerifyMail to this account of yathesh ");
+  try {
+    console.log("transporter");
+    const transporter = nodemailer.createTransport({
+      // host: 'smtp.gmail.com',
+      // port: 587,
+      // secure: false,
+      // requireTLS: true,
+      service:'gmail',
+      auth: {
+        user: "yatheesh.bc8@gmail.com",
+        pass: "cslrrwsbkjxphibf"
+      }
+    });
+    const otp = generateOTP(); // Assuming you have a function to generate the OTP
+console.log(otp,"otp",45);
+    
+    const mailOptions = {
+      from: "yatheesh.bc8@gmail.com",
+      to: email,
+      subject: 'Verification Email',
+      text: `${otp}`
+    }
 
 
+    const info = await transporter.sendMail(mailOptions);
+    console.log(info, 54);
+    console.log("Email has been sent:", info.response);
+    res.redirect("/otpverification");
+    console.log('Mail sent successfully');
+    return otp;
+   
+  } catch (error) {
+    console.log("Error while sending email:", error);
+    console.log(error.message);
+  }
+};
 const securePassword = async (password) => {
     try {
 
@@ -36,41 +78,7 @@ const securePassword = async (password) => {
 
 
 
-//for send mail  function-------------------------------------------------------------------------------------------
-const sendVerifyMail = async (name, email) => {
-    try {
-      console.log(otp, 40);
-        const transporter = nodemailer.createTransport({
-            host: 'smtp.gmail.com',
-            port: 587,
-            secure: false,
-            requireTLS: true,
-            auth: {
-                user: config.emailUser,
-                pass: config.emailPassword
-            }
-        });
-        const mailoptions = {
-            from: config.emailUser,
-            to: email,
-            subject: 'for verification mail',
-            text: `${otp}`
-        }
-        transporter.sendMail(mailoptions, function (error, info) {
-            if (error) {
-                console.log("Error while sending email:", error);
-            } else {
 
-                console.log("Email has been sent:", info.response);
-                res.redirect("/otpverification")
-            }
-            return otp;
-        })
-
-    } catch (error) {
-        console.log(error.message);
-    }
-}
 
 
 
@@ -80,17 +88,15 @@ const sendResetPasswordMail = async (name, email, token) => {
 
 
         const transporter = nodemailer.createTransport({
-            host: 'smtp.gmail.com',
-            port: 587,
-            secure: false,
-            requireTLS: true,
+           service:"gmail",
             auth: {
-                user: config.emailUser,
-                pass: config.emailPassword
+                user:config.emailUser,
+                pass:config.emailPassword
             }
         });
+        
         const mailoptions = {
-            from: config.emailUser,
+            from:config.emailUser,
             to: email,
             subject: 'for Reset Password mail',
             text: `${otp}`
@@ -130,11 +136,13 @@ const insertUser = async (req, res) => {
       console.log(128);
         const name = req.body.name
         const email = req.body.email
+        console.log('name is ',name, 'email is ', email)
         userRegData = req.body
         console.log(132, email);
         const existUser = await User.findOne({ email: email })
 
         if (existUser == null) {
+          console.log('verify email send cheyyunnathinu munne')
             await sendVerifyMail(name, email)
             res.redirect('/otpverification')
 
@@ -153,6 +161,7 @@ const insertUser = async (req, res) => {
 
 // OTP VERIFICATION IN E-MAIL --------------------------------------------------------------------------------------------------------------
 const loadverifyotp = async (req, res) => {
+
     try {
       console.log(155);
         res.render('users/otpverification')
@@ -163,11 +172,13 @@ const loadverifyotp = async (req, res) => {
 
 //OTP VERIFY-------------
 const verifyotp = async (req, res) => {
+  //.log("yathukhg");
     try {
-
+        //conosle.log(userRegData,'user registrtation data')
         const password = await bcrypt.hash(userRegData.password, 10);
         const enteredotp = req.body.otp;
-
+        // console.log(enteredotp,'entered otp is this')
+        // console.log('checking otp page')
         if (otp == enteredotp) {
             const user = new User({
                 name: userRegData.name,

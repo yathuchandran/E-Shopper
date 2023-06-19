@@ -113,68 +113,7 @@
   </section>
   <script src="/validation.js"></script>
 
-  {{!-- <script>
 
-    // Function to check Whether both passwords
-   
-        // is same or not.
-     
-          function checkPassword(form) {
-            password1 = document.getElementById('pass1').value;
-            password2 = document.getElementById('pass2').value;
-
-            // If password not entered
-
-
-            // If confirm password not entered
-
-            // If Not same return False.    
-            if (password1 != password2) {
-              let x = document.getElementById('errormsg')
-              x.innerHTML = "Password did not match: Please try again..."
-              return false;
-            }
-            // If same return True.
-            else {
-              return true;
-            }
-          }
-         
-     
-    function validation() {
-      //user name validation.
-      if (document.Formfill.Username.value = "") {
-        document.getElementById('errormsg').innerHTML = "Enter Username";
-        return false
-      } 
-      else if (document.Formfill.Username.length =< 6) {
-        document.getElementById('errormsg').innerHTML = "Atleast six letter";
-        return false
-      } 
-      else if (document.Formfill.email.value = "") {
-        document.getElementById('errormsg').innerHTML = "Enter  your Email";
-        return false
-      } 
-      else if (document.Formfill.password.value = "") {
-        document.getElementById('errormsg').innerHTML = "Enter  your Password";
-        return false
-      } 
-      else if (document.Formfill.password.value !== document.Formfill.password2.value) {
-        document.getElementById('errormsg').innerHTML = " Password does'nt matched";
-        return false
-      } 
-      else if (document.Formfill.password2.value = "") {
-        document.getElementById('errormsg').innerHTML = "Enter  Confirm Password";
-        return false
-      } 
-      else if (document.Formfill.password.value !== document.Formfill.password2.value) {
-        document.getElementById('errormsg').innerHTML = " Password does'nt matched";
-        return false
-      }
-
-    }
-
-  </script> --}}
   {{> userfooter}}
 </body>
 

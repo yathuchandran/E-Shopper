@@ -22,7 +22,7 @@ let testElement = document.querySelector(".testElement")
 // Regular expression for basic email validation
 let regexName = /^[a-zA-Z\s]+$/;
 // let regexPassword = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/
-let regexPassword = /^[a-zA-Z\s]+$/
+let regexPassword = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
 let regex = /^\S+@\S+\.\S+$/; //email--
 
@@ -45,7 +45,7 @@ const passwordFunction = () => {
     errorMessage1.textContent = "please enter your password"
     return false
   } else if (!regexPassword.test(password.value)) {
-    errorMessage1.textContent = "Password not strong"
+    errorMessage1.textContent = "Password must contain at least 8 characters, including at least one lowercase letter, one uppercase letter, one digit, and one special character (@, $, !, %, *, ?, or &)"
     return false
   } else if (password.value != password2.value) {
     errorMessage1.textContent = "Password did not match"
@@ -61,7 +61,7 @@ const password2Fuction = () => {
     errorMessage2.textContent = "please enter your password"
     return false
   } else if (!regexPassword.test(password2.value)) {
-    errorMessage2.textContent = "Password not strong"
+    errorMessage2.textContent = "Password must contain at least 8 characters, including at least one lowercase letter, one uppercase letter, one digit, and one special character (@, $, !, %, *, ?, or &)"
     return false
   } else if (password.value != password2.value) {
     errorMessage2.textContent = "Password did not match"
