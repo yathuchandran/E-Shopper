@@ -137,7 +137,6 @@
                                     {{!-- <a href="checkout.html" class="dropdown-item">Checkout</a> --}}
                                 </div>
                             </div>
-                            {{!-- <a href="contact.html" class="nav-item nav-link">Contact</a> --}}
                         </div>
                         <div class="navbar-nav ml-auto py-0">
                             {{#if userData1}}
@@ -188,35 +187,7 @@
 
                     <tbody class="align-middle">
                         {{#each cartData}}
-                        {{!-- <tr>
-                            <td class="align-middle"><img src="/uploads/{{this.product_id.image.[0]}}"
-                                    alt="{{this.product_id.image}}" style="width: 50px;"> {{this.product_id.name}}</td>
-                            <td class="align-middle">Rs {{this.product_id.price}}</td>
-
-                            <input type="hidden" name="productprice" value="{{this.product_id.price}}">
-                            <input type="hidden" name="productId" value="{{this.product_id._id}}">
-
-                            <td class="align-middle">
-                                <div class="input-group quantity mx-auto" style="width: 100px;">
-                                    <div class="input-group-btn">
-                                        <button class="btn btn-sm btn-primary btn-minus"
-                                            onclick="totalprice('{{this.product_id._id}}','dec')" type="button">
-                                            <i class="fa fa-minus"></i>
-                                        </button>
-                                    </div>
-                                    <input type="text" class="form-control form-control-sm bg-secondary text-center"
-                                        value="1">
-                                    <div class="input-group-btn">
-                                        <button class="btn btn-sm btn-primary btn-plus">
-                                            <i class="fa fa-plus"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="align-middle">$150</td>
-                            <td class="align-middle"><button class="btn btn-sm btn-primary"><i
-                                        class="fa fa-times"></i></button></td>
-                        </tr> --}}
+                        
                         <tr>
                             <td class="cart__product__item">
                                 <img src="/uploads/{{this.product_id.image.[0]}}" alt="{{this.product_id.image}}"
@@ -313,7 +284,6 @@
                     </tbody>
                 </table>
             </div>
-            {{!-- ////////////////////// --}}
             <div class="col-lg-4">
                 <form class="mb-5" action="">
                     <div class="input-group">
