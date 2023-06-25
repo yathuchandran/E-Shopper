@@ -262,7 +262,8 @@
                             <input type="text" class="form-control p-4" id="couponInput" class="rounded"
                                 placeholder="Enter Coupon" name="search">
                             <div class="input-group-append">
-        <button type="button" id="couponButton" class="btn btn-primary btn-sm"> Apply Coupon</button>
+                                <button type="button" id="couponButton" class="btn btn-primary btn-sm"> Apply
+                                    Coupon</button>
                             </div>
                         </div>
 
@@ -270,102 +271,89 @@
                             <div id="item_card" class="text-danger text-left"></div>
                         </div>
 
-                        {{!-- <div id="item_card"></div> --}}
-                        {{!-- <div class="row">
-                            --}}
+                        <br>
+                        <br>
+                        <div class="card border-secondary mb-5">
+                            <div class="card-header bg-secondary border-0">
+                                <h4 class="font-weight-semi-bold m-0">Order Total</h4>
+                            </div>
+                            <div class="card-body">
 
-
-
-
-                            {{!--
-                            <form class="mb-5" action="">
-                                <div class="input-group">
-                                    <input type="text" class="form-control p-4" placeholder="Coupon Code"
-                                        id="couponInput" class="rounded" name="search">
-                                    <div class="input-group-append">
-                                        <button type="button" id="couponButton" class="btn btn-warning btn-sm">Apply
-                                            Coupon</button>
-                                    </div>
+                                <h5 class="font-weight-medium mb-3">Products</h5>
+                                {{#each cartData}}
+                                <div class="d-flex justify-content-between">
+                                    <p>{{this.product_id.name}} * {{this.quantity}}</p>
+                                    <p><span>Rs
+                                            {{this.product_id.price}}</span></p>
                                 </div>
-                            </form> --}}
-
-
-                            <br>
-                            <br>
-                            <div class="card border-secondary mb-5">
-                                <div class="card-header bg-secondary border-0">
-                                    <h4 class="font-weight-semi-bold m-0">Order Total</h4>
+                                {{/each}}
+                                <hr class="mt-0">
+                                <div class="d-flex justify-content-between mb-3 pt-1">
+                                    <h6 class="font-weight-medium">Subtotal</h6>
+                                    <h6 class="font-weight-medium"><span id="total">{{subTotal}}</span></h6>
                                 </div>
-                                <div class="card-body">
-
-                                    <h5 class="font-weight-medium mb-3">Products</h5>
-                                    {{#each cartData}}
-                                    <div class="d-flex justify-content-between">
-                                        <p>{{this.product_id.name}} * {{this.quantity}}</p>
-                                        <p><span>Rs
-                                                {{this.product_id.price}}</span></p>
-                                    </div>
-                                    {{/each}}
-                                    <hr class="mt-0">
-                                    <div class="d-flex justify-content-between mb-3 pt-1">
-                                        <h6 class="font-weight-medium">Subtotal</h6>
-                                        <h6 class="font-weight-medium"><span id="total">{{subTotal}}</span></h6>
-                                    </div>
-                                    <div class="d-flex justify-content-between">
-                                        <h6 class="font-weight-medium">Shipping</h6>
-                                        <h6 class="font-weight-medium">Free</h6>
-                                    </div>
-                                    <br>
-
-                                    <div class="d-flex justify-content-between">
-                                        <h6 class="font-weight-medium">Discount</h6>
-                                        <h6 class="font-weight-medium"><span id="discount"></span></h6>
-                                    </div>
+                                <div class="d-flex justify-content-between">
+                                    <h6 class="font-weight-medium">Shipping</h6>
+                                    <h6 class="font-weight-medium">Free</h6>
                                 </div>
-                                <div class="card-footer border-secondary bg-transparent">
-                                    <div class="d-flex justify-content-between mt-2">
-                                        <h5 class="font-weight-bold">Total</h5>
-                                        <h5 class="font-weight-bold"> <span id="newtotal">{{subTotal}}</span>
-                                        </h5>
-                                    </div>
+                                <br>
+
+                                <div class="d-flex justify-content-between">
+                                    <h6 class="font-weight-medium">Discount</h6>
+                                    <h6 class="font-weight-medium"><span id="discount"></span></h6>
                                 </div>
                             </div>
+                            <div class="card-footer border-secondary bg-transparent">
+                                <div class="d-flex justify-content-between mt-2">
+                                    <h5 class="font-weight-bold">Total</h5>
+                                    <h5 class="font-weight-bold"> <span id="newtotal">{{subTotal}}</span>
+                                    </h5>
+                                </div>
+                            </div>
+                        </div>
 
 
 
 
 
-                            <body>
-                               <div class="card border-secondary mb-5">
-    <div class="card-header bg-secondary border-0">
-        <h4 class="font-weight-semi-bold m-0">Payment</h4>
-    </div>
-    <div class="payment-options">
-        <div class="form-group">
-            <div class="custom-control custom-radio">
-                <input type="radio" class="custom-control-input" name="pay" id="wallet" value="wallet">
-                <label class="custom-control-label" for="wallet">Wallet</label>
-            </div>
-        </div>
-        <div class="form-group">
-            <div class="custom-control custom-radio">
-                <input type="radio" class="custom-control-input" name="pay" id="cashondelivery" value="cashondelivery" required>
-                <label class="custom-control-label" for="cashondelivery">Cash on Delivery</label>
-            </div>
-        </div>
-        <div class="form-group">
-            <div class="custom-control custom-radio">
-                <input type="radio" class="custom-control-input" name="pay" id="razorpay" value="razorpay" required>
-                <label class="custom-control-label" for="razorpay">Razorpay</label>
-            </div>
-        </div>
-    </div>
-    <input hidden class="totalAfterDiscount rzp-button1" type="text" id="rzp-button1" name="totalAfterDiscount rzp-button1">
+                        <body>
+                            <div class="card border-secondary mb-5">
+                                <div class="card-header bg-secondary border-0">
+                                    <h4 class="font-weight-semi-bold m-0">Payment</h4>
+                                </div>
+                                <div class="payment-options">
+                                    <div class="form-group">
+                                        <div class="custom-control custom-radio">
+                                            <input type="radio" class="custom-control-input" name="pay" id="wallet"
+                                                value="wallet">
+                                            <label class="custom-control-label" for="wallet">Wallet</label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="custom-control custom-radio">
+                                            <input type="radio" class="custom-control-input" name="pay"
+                                                id="cashondelivery" value="cashondelivery" required>
+                                            <label class="custom-control-label" for="cashondelivery">Cash on
+                                                Delivery</label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="custom-control custom-radio">
+                                            <input type="radio" class="custom-control-input" name="pay" id="razorpay"
+                                                value="razorpay" required>
+                                            <label class="custom-control-label" for="razorpay">Razorpay</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <input hidden class="totalAfterDiscount rzp-button1" type="text" id="rzp-button1"
+                                    name="totalAfterDiscount rzp-button1">
 
-    <div class="card-footer border-secondary bg-transparent">
-        <button type="submit" class="btn btn-lg btn-block btn-primary font-weight-bold my-3 py-3" id="placeOrderBtn">Place Order</button>
-    </div>
-</div>
+                                <div class="card-footer border-secondary bg-transparent">
+                                    <button type="submit"
+                                        class="btn btn-lg btn-block btn-primary font-weight-bold my-3 py-3"
+                                        id="placeOrderBtn">Place Order</button>
+                                </div>
+                            </div>
             </form>
         </div>
 </body>
@@ -547,23 +535,6 @@
 
     function RazoverifyPayment(payment, order) {
         location.replace('/ordersuccess')
-
-        /*  $.ajax({
-              url: '/userhome/razo-verify-payment',
-              data: {
-                  payment,
-                  order
-              },
-              method: 'post',
-              success: (response) => {
-                  if (response.status) {
-                       window.location.href = '/ordersuccess'
-                  } else {
-                      // need to render payment faild page
-                  alert("order failed")
-                  }
-              }
-          }) */
     }
 </script>
 
@@ -579,7 +550,7 @@
         const selectedPaymentMethod = Array.from(paymentOptions)
             .find(option => option.checked)
             ?.value;
-        console.log(selectedPaymentMethod,'this is payment option')
+        console.log(selectedPaymentMethod, 'this is payment option')
         const addressOptions = document.getElementsByName("address1");
         const selectedAddress = Array.from(addressOptions)
             .find(option => option.checked)
